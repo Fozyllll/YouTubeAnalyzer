@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TubeAI — Analyse ta chaîne YouTube</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">▶</span>
+        <span class="logo-text">TubeAI</span>
+      </div>
+      <nav class="nav">
+        <a href="#analyze" class="nav-link active">Analyser</a>
+        <a href="#video-tool" class="nav-link">Titre & #Tags</a>
+        <a href="#setup" class="nav-link">Config</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Propulsé par Claude AI + YouTube API</p>
+      <h1 class="hero-title">Analyse ta<br /><em>chaîne</em> YouTube<br />en secondes</h1>
+      <p class="hero-sub">Stats détaillées · Conseils IA · Titres optimisés · Hashtags Shorts</p>
+    </div>
+    <div class="scroll-hint">↓</div>
+  </section>
+
+  <!-- CONFIG KEYS -->
+  <section class="section" id="setup">
+    <div class="container">
+      <div class="section-label">01 — Configuration</div>
+      <h2 class="section-title">Tes clés API</h2>
+      <div class="keys-grid">
+        <div class="key-card">
+          <label class="key-label">🔑 Clé API YouTube Data v3</label>
+          <input type="password" id="ytKey" class="key-input" placeholder="AIzaSy..." />
+          <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank" class="key-help">Obtenir une clé →</a>
+        </div>
+        <div class="key-card">
+          <label class="key-label">🤖 Clé API Anthropic (Claude)</label>
+          <input type="password" id="claudeKey" class="key-input" placeholder="sk-ant-..." />
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" class="key-help">Obtenir une clé →</a>
+        </div>
+      </div>
+      <button class="btn-save" id="saveKeys">Sauvegarder les clés</button>
+      <p class="keys-note">⚡ Tes clés sont stockées uniquement dans ton navigateur (localStorage). Elles ne quittent jamais ta machine.</p>
+    </div>
+  </section>
+
+  <!-- CHANNEL ANALYSIS -->
+  <section class="section" id="analyze">
+    <div class="container">
+      <div class="section-label">02 — Analyse de chaîne</div>
+      <h2 class="section-title">Colle le lien de ta chaîne</h2>
+
+      <div class="url-bar">
+        <input type="text" id="channelUrl" class="url-input" placeholder="https://www.youtube.com/@MaChaîne  ou  https://youtube.com/channel/UC..." />
+        <button class="btn-analyze" id="analyzeBtn">
+          <span class="btn-text">Analyser</span>
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <!-- LOADING -->
+      <div class="loading" id="loading" hidden>
+        <div class="loading-bar"><div class="loading-fill"></div></div>
+        <p class="loading-msg" id="loadingMsg">Récupération des données...</p>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="results" hidden>
+
+        <!-- Channel card -->
+        <div class="channel-card" id="channelCard"></div>
+
+        <!-- Stats grid -->
+        <div class="stats-grid" id="statsGrid"></div>
+
+        <!-- Last videos -->
+        <div class="subsection">
+          <h3 class="subsection-title">Dernières vidéos</h3>
+          <div class="videos-list" id="videosList"></div>
+        </div>
+
+        <!-- AI Advice -->
+        <div class="ai-box" id="aiBox">
+          <div class="ai-header">
+            <span class="ai-badge">Claude AI</span>
+            <span class="ai-title">Conseils personnalisés</span>
+          </div>
+          <div class="ai-content" id="aiContent">
+            <div class="ai-loading">
+              <span class="ai-dot"></span><span class="ai-dot"></span><span class="ai-dot"></span>
+              <span style="margin-left:8px">Claude analyse ta chaîne...</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VIDEO TITLE + HASHTAGS TOOL -->
+  <section class="section dark-section" id="video-tool">
+    <div class="container">
+      <div class="section-label light">03 — Optimisation vidéo</div>
+      <h2 class="section-title light">Titre & hashtags pour ta vidéo</h2>
+      <p class="section-sub">Décris ta vidéo, colle la transcription ou quelques mots-clés — Claude génère un titre accrocheur et, si c'est un Short, les hashtags parfaits.</p>
+
+      <div class="video-form">
+        <div class="form-row">
+          <label class="form-label">Type de contenu</label>
+          <div class="toggle-group">
+            <button class="toggle-btn active" data-type="video" id="btnVideo">Vidéo longue</button>
+            <button class="toggle-btn" data-type="short" id="btnShort">Short</button>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Sujet / description de ta vidéo</label>
+          <textarea id="videoDesc" class="form-textarea" rows="4" placeholder="Ex: Je montre comment j'ai perdu 10kg en 2 mois avec seulement 20 min de sport par jour..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Niche / domaine de ta chaîne <span class="optional">(optionnel)</span></label>
+          <input type="text" id="channelNiche" class="form-input" placeholder="Ex: fitness, gaming, cuisine, finance personnelle..." />
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Langue de sortie</label>
+          <select id="outputLang" class="form-select">
+            <option value="français">Français</option>
+            <option value="anglais">Anglais</option>
+            <option value="espagnol">Espagnol</option>
+          </select>
+        </div>
+
+        <button class="btn-generate" id="generateBtn">
+          Générer avec Claude AI ✨
+        </button>
+      </div>
+
+      <!-- Output -->
+      <div class="gen-output" id="genOutput" hidden>
+        <div class="gen-section">
+          <div class="gen-label">🎯 Titres suggérés</div>
+          <div class="gen-titles" id="genTitles"></div>
+        </div>
+        <div class="gen-section" id="hashtagSection" hidden>
+          <div class="gen-label">#️⃣ Hashtags pour le Short</div>
+          <div class="gen-hashtags" id="genHashtags"></div>
+        </div>
+        <div class="gen-section">
+          <div class="gen-label">💡 Pourquoi ces titres ?</div>
+          <div class="gen-explanation" id="genExplanation"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="logo-text small">TubeAI</span>
+      <span class="footer-note">Open source · Tes données ne quittent pas ton navigateur</span>
+      <a href="https://github.com" class="footer-gh">GitHub ↗</a>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
