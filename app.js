@@ -1,6 +1,6 @@
 /* ======================
    TubeAI v2 — Application
-   Propulsé par Claude AI (Anthropic)
+   Propulsé par Groq AI (LLaMA 3.3 — GRATUIT)
    ====================== */
 
 const $ = id => document.getElementById(id);
@@ -57,7 +57,7 @@ function showTab(tabId) {
 // ── KEYS MANAGEMENT ─────────────────────────────────────────────────
 function loadKeys() {
   const yt = localStorage.getItem('tubeai_yt_key') || '';
-  const cl = localStorage.getItem('tubeai_claude_key') || '';
+  const cl = localStorage.getItem('tubeai_groq_key') || '';
   $('ytKey').value = yt;
   $('claudeKey').value = cl;
   updateKeyStatus('yt', yt);
@@ -85,7 +85,7 @@ $('saveKeys').addEventListener('click', () => {
   const cl = $('claudeKey').value.trim();
   if (!yt || !cl) { showToast('⚠️ Remplis les deux clés !'); return; }
   localStorage.setItem('tubeai_yt_key', yt);
-  localStorage.setItem('tubeai_claude_key', cl);
+  localStorage.setItem('tubeai_groq_key', cl);
   updateKeyStatus('yt', yt);
   updateKeyStatus('claude', cl);
   showToast('✅ Clés sauvegardées !');
@@ -94,7 +94,7 @@ $('saveKeys').addEventListener('click', () => {
 function getKeys() {
   return {
     yt: localStorage.getItem('tubeai_yt_key') || '',
-    claude: localStorage.getItem('tubeai_claude_key') || ''
+    claude: localStorage.getItem('tubeai_groq_key') || ''
   };
 }
 
@@ -250,26 +250,27 @@ function renderCharts(videos) {
   });
 }
 
-// ── CLAUDE API ────────────────────────────────────────────────────────
-async function callClaude(prompt, claudeKey) {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
+// ── GROQ API (GRATUIT) ────────────────────────────────────────────────
+// Clé gratuite sur https://console.groq.com
+// Modèle : llama-3.3-70b-versatile — rapide et très capable
+async function callGroq(prompt, groqKey) {
+  const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': claudeKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
+      'Authorization': `Bearer ${groqKey}`
     },
     body: JSON.stringify({
-      model: 'claude-opus-4-5',
+      model: 'llama-3.3-70b-versatile',
       max_tokens: 2000,
+      temperature: 0.8,
       messages: [{ role: 'user', content: prompt }]
     })
   });
 
   const data = await response.json();
   if (data.error) throw new Error(data.error.message);
-  return data.content?.[0]?.text || '';
+  return data.choices?.[0]?.message?.content || '';
 }
 
 // ── RENDER AI ADVICE ─────────────────────────────────────────────────
@@ -294,7 +295,7 @@ $('channelUrl').addEventListener('keydown', e => { if (e.key === 'Enter') analyz
 async function analyzeChannel() {
   const { yt, claude } = getKeys();
   if (!yt) { showToast('❗ Ajoute ta clé YouTube dans Config'); return; }
-  if (!claude) { showToast('❗ Ajoute ta clé Claude (Anthropic) dans Config'); return; }
+  if (!claude) { showToast('❗ Ajoute ta clé Groq dans Config'); return; }
 
   const url = $('channelUrl').value.trim();
   if (!url) { showToast('⚠️ Colle un lien YouTube !'); return; }
@@ -328,7 +329,7 @@ async function analyzeChannel() {
     setTimeout(() => $('results').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
 
     // Lance les analyses IA en parallèle
-    setLoading(true, 'Claude analyse ta chaîne...');
+    setLoading(true, 'Groq AI analyse ta chaîne...');
     await Promise.all([
       generateAiAdvice(ch, videos, claude),
       generateVideoIdeas(ch, videos, claude)
@@ -381,10 +382,10 @@ Fournis une analyse en français avec :
 Sois direct, percutant, basé sur les vraies données.`;
 
   try {
-    const advice = await callClaude(prompt, claudeKey);
+    const advice = await callGroq(prompt, claudeKey);
     renderMarkdown(advice, 'aiContent');
   } catch (err) {
-    $('aiContent').innerHTML = `<p style="color:#ff6b6b">Erreur Claude : ${err.message}</p>`;
+    $('aiContent').innerHTML = `<p style="color:#ff6b6b">Erreur Groq : ${err.message}</p>`;
   }
 }
 
@@ -409,10 +410,10 @@ Génère des idées variées, originales et adaptées à la niche de la chaîne.
 Réponds UNIQUEMENT avec les 8 lignes JSON, rien d'autre.`;
 
   try {
-    const result = await callClaude(prompt, claudeKey);
+    const result = await callGroq(prompt, claudeKey);
     renderVideoIdeas(result);
   } catch (err) {
-    $('ideasContent').innerHTML = `<p style="color:#ff6b6b">Erreur Claude : ${err.message}</p>`;
+    $('ideasContent').innerHTML = `<p style="color:#ff6b6b">Erreur Groq : ${err.message}</p>`;
   }
 }
 
@@ -465,7 +466,7 @@ $('generateBtn').addEventListener('click', generateTitleAndTags);
 
 async function generateTitleAndTags() {
   const { claude } = getKeys();
-  if (!claude) { showToast('❗ Ajoute ta clé Claude dans Config'); return; }
+  if (!claude) { showToast('❗ Ajoute ta clé Groq dans Config'); return; }
 
   const desc = $('videoDesc').value.trim();
   if (!desc) { showToast('⚠️ Décris ta vidéo !'); return; }
@@ -475,7 +476,7 @@ async function generateTitleAndTags() {
   const isShortContent = contentType === 'short';
 
   $('generateBtn').disabled = true;
-  $('generateBtn').textContent = 'Claude génère... ✨';
+  $('generateBtn').textContent = 'Groq génère... ✨';
   $('genOutput').hidden = true;
 
   const prompt = `Tu es un expert en optimisation YouTube et copywriting viral.
@@ -500,13 +501,13 @@ ${isShortContent ? `2. EXACTEMENT 15 hashtags pour les Shorts.
 Réponds UNIQUEMENT avec ce format, rien d'autre.`;
 
   try {
-    const result = await callClaude(prompt, claude);
+    const result = await callGroq(prompt, claude);
     parseAndRenderGenOutput(result, isShortContent);
   } catch (err) {
-    showToast('❌ Erreur Claude : ' + err.message, 4000);
+    showToast('❌ Erreur Groq : ' + err.message, 4000);
   } finally {
     $('generateBtn').disabled = false;
-    $('generateBtn').textContent = 'Générer avec Claude AI ✨';
+    $('generateBtn').textContent = 'Générer avec Groq AI ✨';
   }
 }
 
@@ -543,4 +544,4 @@ function parseAndRenderGenOutput(text, isShortContent) {
 // ── INIT ─────────────────────────────────────────────────────────────
 loadKeys();
 console.log('%cTubeAI v2 🎬', 'font-size:24px; color:#ff2d2d; font-weight:bold');
-console.log('Propulsé par
+console.log('Propulsé par Groq AI (LLaMA 3.3 — GRATUIT) — https://console.groq.com');
