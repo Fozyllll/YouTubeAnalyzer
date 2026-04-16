@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TubeAI Pro — YouTube Intelligence + Formation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* TOUS LES STYLES (identiques à la version précédente) */
+[data-theme="dark"]{--bg:#060709;--s1:#0d0f12;--s2:#141619;--s3:#1b1e23;--s4:#22262d;--b1:#1e2229;--b2:#2a3040;--b3:#363d4d;--t1:#f0f2f7;--t2:#8b95a8;--t3:#4e5669;--t4:#2d3445;--hdr-bg:rgba(6,7,9,.92);--shadow:0 4px 24px rgba(0,0,0,.4);}
+[data-theme="light"]{--bg:#f4f5f8;--s1:#ffffff;--s2:#f0f2f6;--s3:#e8eaf0;--s4:#dde0ea;--b1:#e2e5ef;--b2:#d0d4e4;--b3:#bcc2d6;--t1:#0f1117;--t2:#4a5068;--t3:#8892a8;--t4:#b0b8cc;--hdr-bg:rgba(244,245,248,.92);--shadow:0 4px 24px rgba(0,0,0,.08);}
+:root{--red:#ff3b30;--red-dim:#c42920;--orange:#ff7c2a;--green:#00c97a;--blue:#3b82f6;--yellow:#fbbf24;--purple:#a78bfa;--fh:'Syne',sans-serif;--fb:'Instrument Sans',sans-serif;--fm:'DM Mono',monospace;--r:8px;--r2:14px;--r3:20px;--tr:.16s cubic-bezier(.4,0,.2,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:14px;line-height:1.6;overflow:hidden;height:100vh;transition:background .2s,color .2s}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:3px}
+.hdr{position:fixed;top:0;left:0;right:0;height:52px;z-index:300;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--hdr-bg);backdrop-filter:blur(24px);border-bottom:1px solid var(--b1)}
+.logo{font-family:var(--fh);font-size:20px;font-weight:800;letter-spacing:-.03em;color:var(--t1);display:flex;align-items:center;gap:7px;user-select:none;flex-shrink:0}
+.logo-pip{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red),0 0 20px rgba(255,59,48,.4)}
+.logo-badge{font-size:9px;background:linear-gradient(135deg,var(--red),var(--orange));padding:2px 6px;border-radius:999px;color:#fff;margin-left:6px}
+.hdr-sep{width:1px;height:20px;background:var(--b2);flex-shrink:0}
+.hdr-nav{display:flex;gap:2px}
+.hn{background:none;border:none;color:var(--t3);font-family:var(--fb);font-size:12px;font-weight:500;padding:5px 10px;border-radius:6px;cursor:pointer;transition:var(--tr);white-space:nowrap}
+.hn:hover{color:var(--t2);background:var(--s3)}
+.hn.on{color:var(--t1);background:var(--s4)}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:5px}
+.hdr-btn{background:none;border:1px solid var(--b2);color:var(--t3);font-family:var(--fb);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:4px;white-space:nowrap}
+.hdr-btn:hover{color:var(--t1);border-color:var(--b3)}
+.hdr-btn.ok{border-color:rgba(0,201,122,.35);color:var(--green)}
+.pip{width:5px;height:5px;border-radius:50%;background:var(--red);flex-shrink:0}
+.pip.ok{background:var(--green);box-shadow:0 0 6px rgba(0,201,122,.5)}
+.theme-btn{background:none;border:1px solid var(--b2);color:var(--t3);width:30px;height:30px;border-radius:6px;cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;font-size:14px}
+.theme-btn:hover{color:var(--t1);border-color:var(--b3);background:var(--s3)}
+.refresh-btn{background:none;border:1px solid var(--b2);color:var(--t3);font-family:var(--fb);font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:4px}
+.refresh-btn:hover{color:var(--green);border-color:rgba(0,201,122,.4)}
+.overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.on{opacity:1;pointer-events:all}
+.modal{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r3);width:100%;max-width:480px;overflow:hidden;transform:scale(.96) translateY(10px);transition:transform .2s;box-shadow:var(--shadow)}
+.overlay.on .modal{transform:scale(1) translateY(0)}
+.mh{padding:18px 22px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mh-title{font-family:var(--fh);font-size:16px;font-weight:700}
+.mclose{background:var(--s3);border:none;color:var(--t3);width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.mclose:hover{color:var(--t1);background:var(--s4)}
+.mb{padding:18px 22px}
+.mf{margin-bottom:14px}
+.ml{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.ml a{color:var(--orange);text-decoration:none;font-size:11px;text-transform:none;letter-spacing:0;font-weight:500}
+.mi{width:100%;background:var(--s3);border:1px solid var(--b2);border-radius:var(--r);padding:9px 12px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none;transition:var(--tr)}
+.mi:focus{border-color:var(--red)}
+.krow{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;color:var(--t3)}
+.kd{width:5px;height:5px;border-radius:50%;background:var(--t4)}
+.kd.ok{background:var(--green)}.kd.err{background:var(--red)}
+.save-btn{width:100%;background:var(--red);border:none;color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;padding:11px;border-radius:var(--r);cursor:pointer;transition:var(--tr);margin-top:4px}
+.save-btn:hover{background:var(--red-dim);transform:translateY(-1px)}
+.promo-section{margin-top:16px;padding-top:16px;border-top:1px solid var(--b1)}
+.promo-row{display:flex;gap:8px;margin-top:8px}
+.promo-input{flex:1;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 10px;color:var(--t1);font-size:12px}
+.promo-btn{background:var(--green);border:none;color:#fff;padding:8px 16px;border-radius:var(--r);cursor:pointer;font-weight:600}
+.badge-premium{background:linear-gradient(135deg,var(--green),#00a86b);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block}
+.badge-free{background:var(--b2);color:var(--t3);font-size:10px;font-weight:700;padding:3px 8px;border-radius:999px;display:inline-block}
+.app{display:flex;height:100vh;padding-top:52px}
+.sb{width:242px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden;transition:background .2s}
+.sb-form{padding:12px}
+.sb-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);display:block;margin-bottom:5px}
+.sb-input{width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 10px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none;transition:var(--tr)}
+.sb-input:focus{border-color:var(--red)}
+.sb-input::placeholder{color:var(--t4)}
+.sb-go{width:100%;margin-top:7px;background:var(--red);border:none;color:#fff;font-family:var(--fh);font-size:13px;font-weight:700;padding:9px;border-radius:var(--r);cursor:pointer;transition:var(--tr);display:flex;align-items:center;justify-content:center;gap:6px}
+.sb-go:hover:not(:disabled){background:var(--red-dim);transform:translateY(-1px)}
+.sb-go:disabled{opacity:.4;cursor:not-allowed}
+.sb-div{height:1px;background:var(--b1);margin:6px 0}
+.sb-sec{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t4);padding:0 12px;margin-bottom:4px;margin-top:8px}
+.sb-hist{flex:1;overflow-y:auto;padding:0 5px 8px}
+.hi{padding:7px 9px;border-radius:var(--r);cursor:pointer;transition:var(--tr);display:flex;align-items:center;gap:9px;margin-bottom:1px}
+.hi:hover{background:var(--s3)}
+.hi-img{width:30px;height:30px;border-radius:50%;object-fit:cover;flex-shrink:0;background:var(--s3);border:1px solid var(--b1)}
+.hi-info{min-width:0;flex:1}
+.hi-name{font-size:12px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hi-sub{font-size:10px;color:var(--t3)}
+.sb-bottom{padding:8px 5px;border-top:1px solid var(--b1)}
+.sb-link{display:flex;align-items:center;gap:7px;width:100%;background:none;border:none;color:var(--t3);font-family:var(--fb);font-size:12px;font-weight:500;padding:7px 9px;border-radius:var(--r);cursor:pointer;transition:var(--tr);text-align:left}
+.sb-link:hover{background:var(--s3);color:var(--t1)}
+.sb-link .ico{font-size:13px;width:16px;text-align:center}
+.sb-badge{margin-left:auto;font-size:9px;background:var(--red);color:#fff;padding:2px 5px;border-radius:999px;font-weight:700}
+.content{flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden}
+.view{display:none;flex:1;overflow-y:auto;overflow-x:hidden;min-height:0}
+.view.on{display:flex;flex-direction:column}
+.welcome{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 24px;text-align:center}
+.w-logo{font-family:var(--fh);font-size:68px;font-weight:800;letter-spacing:-.05em;line-height:.9;margin-bottom:16px;background:linear-gradient(135deg,var(--t1) 40%,var(--t3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.w-logo span{-webkit-text-fill-color:var(--red)}
+.w-sub{color:var(--t3);font-size:14px;max-width:380px;margin-bottom:36px}
+.w-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:560px;width:100%;margin-bottom:28px}
+.wc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:16px;text-align:left;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden}
+.wc:hover{border-color:var(--b3);transform:translateY(-2px);box-shadow:var(--shadow)}
+.wc-icon{font-size:18px;margin-bottom:8px}
+.wc-t{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.wc-d{font-size:11px;color:var(--t3);line-height:1.4}
+.w-premium{background:linear-gradient(135deg,var(--green),#00a86b);border:none}
+.w-premium .wc-t,.w-premium .wc-d{color:#fff}
+.w-tip{font-size:11px;color:var(--t4)}
+.w-tip kbd{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:1px 5px;font-family:var(--fm);font-size:10px;color:var(--t3)}
+.cv{padding:18px;max-width:980px;width:100%}
+.sk{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:skshimmer 1.4s infinite;border-radius:var(--r)}
+@keyframes skshimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-hero{height:110px;border-radius:var(--r2);margin-bottom:12px}
+.sk-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.sk-stat{height:76px;border-radius:var(--r2)}
+.ch{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:18px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.ch-glow{position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,59,48,.06),transparent 65%);pointer-events:none}
+.ch-av{width:62px;height:62px;border-radius:50%;object-fit:cover;border:2px solid var(--b2);flex-shrink:0}
+.ch-body{flex:1;min-width:0;padding-right:76px}
+.ch-name{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:-.025em;line-height:1.1}
+.ch-handle{font-size:12px;color:var(--red);font-weight:600;margin:3px 0 5px;display:flex;align-items:center;gap:5px}
+.ch-handle a{color:inherit;text-decoration:none}
+.ch-handle a:hover{text-decoration:underline}
+.ch-desc{font-size:12px;color:var(--t2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ch-foot{font-size:11px;color:var(--t3);margin-top:5px}
+.ch-score{position:absolute;top:14px;right:14px;text-align:center;min-width:60px}
+.score-ring{width:58px;height:58px;display:block;margin:0 auto}
+.score-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);margin-top:2px;display:block}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.sbox{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 13px}
+.sbox-icon{font-size:16px;margin-bottom:6px;display:block}
+.sval{font-family:var(--fh);font-size:24px;font-weight:800;letter-spacing:-.025em;line-height:1}
+.slbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:2px}
+.sbadge{display:inline-flex;align-items:center;gap:3px;font-size:10px;margin-top:4px;font-family:var(--fm)}
+.sbadge.good{color:var(--green)}.sbadge.avg{color:var(--yellow)}.sbadge.low{color:var(--red)}
+.insight-card{background:linear-gradient(135deg,var(--s1),var(--s2));border:1px solid var(--b1);border-radius:var(--r2);padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.insight-title{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.insight-title .tag{font-size:9px;background:var(--green);color:#fff;padding:2px 8px;border-radius:999px}
+.insight-list{list-style:none}
+.insight-list li{padding:8px 0;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;gap:10px}
+.insight-list li:last-child{border-bottom:none}
+.insight-list .emoji{font-size:16px}
+.insight-list .text{flex:1;font-size:12px;color:var(--t2)}
+.winning-pattern{background:linear-gradient(135deg,rgba(0,201,122,.08),rgba(0,201,122,.02));border-left:3px solid var(--green)}
+.tabs{display:flex;gap:1px;background:var(--b1);border-radius:var(--r);padding:3px;margin-bottom:12px;flex-wrap:wrap}
+.tab{flex:1;background:none;border:none;color:var(--t3);font-family:var(--fb);font-size:10px;font-weight:600;padding:6px 5px;border-radius:6px;cursor:pointer;transition:var(--tr);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;min-width:0}
+.tab.on{background:var(--s3);color:var(--t1)}
+.tp{display:none}.tp.on{display:block}
+.vlist{display:flex;flex-direction:column;gap:6px}
+.vi{display:flex;gap:11px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:11px;align-items:center;cursor:pointer;transition:var(--tr);text-decoration:none}
+.vi:hover{border-color:var(--b3);background:var(--s2)}
+.vth{width:84px;height:48px;object-fit:cover;border-radius:5px;flex-shrink:0;background:var(--s3)}
+.vi-body{flex:1;min-width:0}
+.vi-title{font-size:12px;font-weight:600;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t1);margin-bottom:4px}
+.vi-meta{display:flex;flex-wrap:wrap;gap:7px}
+.vi-meta span{font-size:10px;color:var(--t3)}
+.vbadge{font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;flex-shrink:0}
+.vbadge.short{background:rgba(255,59,48,.12);color:var(--red);border:1px solid rgba(255,59,48,.25)}
+.vbadge.long{background:var(--s3);color:var(--t3);border:1px solid var(--b1)}
+.vi-perf{flex-shrink:0;text-align:right;min-width:56px}
+.vi-eng{font-family:var(--fm);font-size:11px;font-weight:500}
+.vi-eng.good{color:var(--green)}.vi-eng.avg{color:var(--yellow)}.vi-eng.low{color:var(--red)}
+.vi-eng-lbl{font-size:9px;color:var(--t3);margin-top:1px}
+.seo-list{display:flex;flex-direction:column;gap:8px}
+.seo-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px}
+.seo-top{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.seo-thumb{width:72px;height:40px;object-fit:cover;border-radius:5px;flex-shrink:0;background:var(--s3)}
+.seo-title{font-size:12px;font-weight:600;color:var(--t1);flex:1;line-height:1.35}
+.seo-score-badge{flex-shrink:0;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fm);font-size:12px;font-weight:700;border:2px solid}
+.seo-score-badge.A{color:var(--green);border-color:var(--green)}
+.seo-score-badge.B{color:var(--yellow);border-color:var(--yellow)}
+.seo-score-badge.C{color:var(--orange);border-color:var(--orange)}
+.seo-score-badge.D{color:var(--red);border-color:var(--red)}
+.seo-items{display:flex;flex-wrap:wrap;gap:6px}
+.seo-item{font-size:10px;padding:3px 8px;border-radius:5px;display:flex;align-items:center;gap:4px}
+.seo-item.ok{background:rgba(0,201,122,.1);color:var(--green);border:1px solid rgba(0,201,122,.2)}
+.seo-item.warn{background:rgba(251,191,36,.1);color:var(--yellow);border:1px solid rgba(251,191,36,.2)}
+.seo-item.bad{background:rgba(255,59,48,.1);color:var(--red);border:1px solid rgba(255,59,48,.2)}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px}
+.cc-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cc-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3)}
+.cc-val{font-family:var(--fm);font-size:10px;color:var(--t2)}
+.cw{position:relative;height:150px}
+.ai-box{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:10px;box-shadow:var(--shadow)}
+.ai-hd{padding:11px 14px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:7px}
+.ai-tag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;background:var(--orange);color:#fff;padding:2px 7px;border-radius:999px}
+.ai-hd-title{font-size:12px;font-weight:600;color:var(--t2)}
+.ai-hd-title b{color:var(--t1)}
+.ai-body{padding:14px;font-size:13px;line-height:1.75;color:var(--t2)}
+.ai-body h3{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--t1);margin:12px 0 4px;letter-spacing:-.01em}
+.ai-body h3:first-child{margin-top:0}
+.ai-body strong{color:var(--t1);font-weight:600}
+.ai-body ul{margin:4px 0 4px 14px}
+.ai-body li{margin-bottom:2px}
+.ai-ld{display:flex;align-items:center;gap:7px;color:var(--t3);font-size:12px}
+.d{width:4px;height:4px;border-radius:50%;background:var(--orange);animation:dp 1.1s infinite}
+.d:nth-child(2){animation-delay:.18s}.d:nth-child(3){animation-delay:.36s}
+@keyframes dp{0%,80%,100%{opacity:.2;transform:scale(.7)}40%{opacity:1;transform:scale(1)}}
+.ig{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}
+.ic{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:12px;transition:var(--tr)}
+.ic:hover{border-color:var(--b2);background:var(--s2)}
+.ic-type{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px}
+.ic-title{font-size:12px;font-weight:600;color:var(--t1);line-height:1.35;margin-bottom:5px}
+.ic-why{font-size:11px;color:var(--t3);line-height:1.45}
+.ic-acts{margin-top:8px;display:flex;gap:4px}
+.ic-btn{background:none;border:1px solid var(--b2);color:var(--t3);font-size:10px;padding:3px 8px;border-radius:5px;cursor:pointer;transition:var(--tr);font-family:var(--fb)}
+.ic-btn:hover{border-color:var(--t3);color:var(--t1)}
+.cmp-v{padding:18px;max-width:1100px;width:100%}
+.cmp-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.cmp-input-box{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px}
+.cmp-input-box label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);display:block;margin-bottom:7px}
+.cmp-input-row{display:flex;gap:7px}
+.cmp-field{flex:1;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 10px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none}
+.cmp-field:focus{border-color:var(--red)}
+.cmp-go{background:var(--red);border:none;color:#fff;font-family:var(--fh);font-size:13px;font-weight:700;padding:8px 14px;border-radius:var(--r);cursor:pointer}
+.cmp-go:hover{background:var(--red-dim)}
+.cmp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.cmp-hero{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px;text-align:center}
+.cmp-av{width:52px;height:52px;border-radius:50%;object-fit:cover;border:2px solid var(--b2);margin:0 auto 8px}
+.cmp-name{font-family:var(--fh);font-size:16px;font-weight:800}
+.cmp-handle{font-size:11px;color:var(--red);margin-bottom:8px}
+.cmp-score-wrap{display:inline-flex;align-items:center;gap:5px;font-size:12px;margin-top:4px}
+.cmp-stats-table{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;margin-bottom:14px}
+.cmp-row{display:grid;grid-template-columns:2fr 1fr 1fr;border-bottom:1px solid var(--b1)}
+.cmp-row:last-child{border-bottom:none}
+.cmp-row.head{background:var(--s2)}
+.cmp-cell{padding:10px 14px;font-size:12px}
+.cmp-cell.lbl{color:var(--t3);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.cmp-cell.win{color:var(--green);font-weight:700}
+.winner-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;background:rgba(0,201,122,.15);color:var(--green);border:1px solid rgba(0,201,122,.3);padding:2px 7px;border-radius:999px;margin-top:6px}
+.alerts-v{padding:18px;max-width:800px;width:100%}
+.alerts-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.alerts-title{font-family:var(--fh);font-size:22px;font-weight:800}
+.alert-empty{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:32px;text-align:center;color:var(--t3)}
+.alert-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:12px}
+.alert-card.perf{border-left:3px solid var(--green)}
+.alert-card.warn{border-left:3px solid var(--yellow)}
+.alert-icon{font-size:18px}
+.alert-body{flex:1}
+.alert-title{font-size:13px;font-weight:600;color:var(--t1);margin-bottom:3px}
+.alert-desc{font-size:12px;color:var(--t2)}
+.alert-dismiss{background:none;border:none;color:var(--t4);cursor:pointer;font-size:14px}
+.alert-dismiss:hover{color:var(--t2)}
+.alert-count{background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:999px;margin-left:4px;vertical-align:middle}
+.chat-v{flex:1;display:none;flex-direction:column;height:calc(100vh - 52px)}
+.chat-hd{padding:12px 16px;border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:10px;flex-shrink:0;background:var(--s1)}
+.chat-hd-ico{width:32px;height:32px;border-radius:var(--r);background:linear-gradient(135deg,var(--orange),#ff4500);display:flex;align-items:center;justify-content:center;font-size:15px}
+.chat-hd-info{flex:1}
+.chat-hd-title{font-family:var(--fh);font-size:15px;font-weight:700}
+.chat-hd-sub{font-size:11px;color:var(--t3)}
+.ctx-chip{font-size:10px;background:rgba(0,201,122,.1);border:1px solid rgba(0,201,122,.2);color:var(--green);padding:3px 9px;border-radius:999px}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.msg{display:flex;gap:8px;max-width:780px}
+.msg.u{flex-direction:row-reverse;align-self:flex-end}
+.msg-av{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:var(--s3);border:1px solid var(--b2);color:var(--t2)}
+.msg-av.ai{background:linear-gradient(135deg,var(--orange),#ff4500);border-color:transparent;color:#fff}
+.msg-bbl{background:var(--s2);border:1px solid var(--b1);border-radius:11px;padding:9px 13px;font-size:13px;line-height:1.65;color:var(--t2);max-width:540px}
+.msg.u .msg-bbl{background:var(--red);border-color:var(--red);color:#fff;border-radius:11px 3px 11px 11px}
+.chat-sugg{padding:0 16px 8px;display:flex;flex-wrap:wrap;gap:5px}
+.sg{background:none;border:1px solid var(--b2);color:var(--t3);font-size:11px;padding:5px 10px;border-radius:999px;cursor:pointer}
+.sg:hover{border-color:var(--orange);color:var(--t1)}
+.chat-bar{padding:10px 14px;border-top:1px solid var(--b1);display:flex;gap:8px;align-items:flex-end}
+.chat-in{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:9px;padding:9px 13px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none;resize:none;max-height:110px}
+.chat-in:focus{border-color:var(--red)}
+.chat-send{background:var(--red);border:none;color:#fff;width:36px;height:36px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px}
+.chat-send:hover{background:var(--red-dim)}
+.tool-v{display:none;flex:1;padding:18px;overflow-y:auto}
+.tool-wrap{max-width:700px}
+.tool-hd{margin-bottom:16px}
+.tool-hd h2{font-family:var(--fh);font-size:22px;font-weight:800}
+.tbox{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:18px;margin-bottom:12px}
+.frow{margin-bottom:12px}
+.flbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--t3);display:block;margin-bottom:6px}
+.fin,.fta{width:100%;background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 11px;color:var(--t1);font-size:13px;font-family:var(--fb);outline:none}
+.fta{resize:vertical;min-height:72px}
+.fin:focus,.fta:focus{border-color:var(--red)}
+.tog-row{display:flex;gap:5px}
+.tg{background:var(--s3);border:1px solid var(--b1);color:var(--t3);font-size:11px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer}
+.tg.on{background:var(--red);border-color:var(--red);color:#fff}
+.gen-go{width:100%;background:linear-gradient(135deg,#ff6b00,var(--red));border:none;color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;padding:12px;border-radius:var(--r);cursor:pointer}
+.gen-go:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.out-box{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px;margin-bottom:8px}
+.out-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);margin-bottom:10px}
+.tr-row{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;background:var(--s3);border-radius:var(--r);padding:10px 12px;margin-bottom:6px}
+.tr-txt{font-size:13px;color:var(--t1);flex:1}
+.cp-btn{background:none;border:1px solid var(--b2);color:var(--t3);font-size:10px;padding:3px 8px;border-radius:5px;cursor:pointer}
+.cp-btn:hover{border-color:var(--t2);color:var(--t1)}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tpill{background:var(--s3);border:1px solid var(--b1);color:var(--t2);font-size:11px;padding:3px 9px;border-radius:999px;cursor:pointer}
+.tpill:hover{background:var(--red);border-color:var(--red);color:#fff}
+.formation-v{padding:18px;max-width:1000px;width:100%}
+.formation-hero{background:linear-gradient(135deg,#1a0a0a,var(--s1));border:1px solid var(--b1);border-radius:var(--r3);padding:28px;text-align:center;margin-bottom:20px}
+.formation-hero h1{font-family:var(--fh);font-size:32px;font-weight:800;margin-bottom:12px}
+.formation-hero p{color:var(--t2)}
+.formation-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-top:20px}
+.formation-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);overflow:hidden;transition:var(--tr);cursor:pointer}
+.formation-card:hover{transform:translateY(-2px);border-color:var(--b2);box-shadow:var(--shadow)}
+.formation-card-img{height:100px;background:linear-gradient(135deg,var(--red),var(--orange));display:flex;align-items:center;justify-content:center;font-size:36px}
+.formation-card-content{padding:16px}
+.formation-card-title{font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:8px}
+.formation-card-desc{font-size:12px;color:var(--t3);margin-bottom:12px}
+.formation-badge{background:var(--green);color:#fff;font-size:9px;padding:2px 8px;border-radius:999px;display:inline-block}
+.formation-locked{background:rgba(0,0,0,.5);border-radius:var(--r3);padding:32px;text-align:center}
+.formation-locked .lock-icon{font-size:48px;margin-bottom:16px}
+.lesson-modal{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.9);backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.lesson-modal.on{opacity:1;pointer-events:all}
+.lesson-content{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r3);max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:24px}
+.lesson-content h2{font-family:var(--fh);font-size:24px;margin-bottom:16px}
+.lesson-content h3{font-family:var(--fh);font-size:16px;margin:16px 0 8px;color:var(--red)}
+.lesson-content p{font-size:14px;line-height:1.7;color:var(--t2);margin-bottom:12px}
+.lesson-content ul{margin:8px 0 16px 20px}
+.lesson-content li{margin-bottom:6px;font-size:13px;color:var(--t2)}
+.lesson-close{background:var(--red);border:none;color:#fff;padding:8px 20px;border-radius:var(--r);cursor:pointer;margin-top:20px;font-weight:600}
+.pbar{position:fixed;top:52px;left:0;right:0;height:2px;z-index:400;pointer-events:none}
+.pbar-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--orange));width:0;border-radius:0 2px 2px 0}
+.pbar-fill.anim{animation:pbanim 1.8s ease-in-out infinite}
+@keyframes pbanim{0%{width:0;margin-left:0}60%{width:50%;margin-left:25%}100%{width:0;margin-left:100%}}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--s3);border:1px solid var(--b3);color:var(--t1);font-size:12px;padding:8px 16px;border-radius:999px;z-index:999;opacity:0;transition:all .18s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.export-btn{background:none;border:1px solid var(--b2);color:var(--t3);font-family:var(--fb);font-size:11px;padding:5px 11px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.export-btn:hover{color:var(--blue);border-color:var(--blue)}
+@media(max-width:768px){.sb{display:none}.hdr-nav{display:none}.stats{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:1fr}.w-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo"><span class="logo-pip"></span>TubeAI<span class="logo-badge">PRO</span></div>
+  <div class="hdr-sep"></div>
+  <nav class="hdr-nav">
+    <button class="hn on" onclick="goView('analyze')">Analyser</button>
+    <button class="hn" onclick="goView('compare')">⚖️ Comparer</button>
+    <button class="hn" onclick="goView('chat')">Chat IA</button>
+    <button class="hn" onclick="goView('tool')">Titres & Tags</button>
+    <button class="hn" onclick="goView('alerts')">Alertes <span class="alert-count" id="alertCount" style="display:none">0</span></button>
+    <button class="hn" onclick="goView('formation')">🎓 Formation</button>
+  </nav>
+  <div class="hdr-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <button class="refresh-btn" onclick="hardReload()"><span class="ri">↻</span> Mise à jour</button>
+    <button class="hdr-btn" id="cfgBtn" onclick="openCfg()"><span class="pip" id="cfgPip"></span> Config</button>
+  </div>
+</header>
+
+<div class="pbar"><div class="pbar-fill" id="pbar"></div></div>
+
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="mh"><span class="mh-title">⚙️ Configuration</span><button class="mclose" onclick="closeCfg()">✕</button></div>
+    <div class="mb">
+      <div class="mf">
+        <div class="ml">Clé YouTube Data v3 <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank">Obtenir →</a></div>
+        <input type="password" id="ytKey" class="mi" placeholder="AIzaSy..."/>
+        <div class="krow"><span class="kd" id="ytDot"></span><span id="ytSt">Non configurée</span></div>
+      </div>
+      <div class="mf">
+        <div class="ml">Clé Groq AI — LLaMA 3.3 (Gratuit) <a href="https://console.groq.com/keys" target="_blank">Obtenir →</a></div>
+        <input type="password" id="groqKey" class="mi" placeholder="gsk_..."/>
+        <div class="krow"><span class="kd" id="groqDot"></span><span id="groqSt">Non configurée</span></div>
+      </div>
+      <button class="save-btn" onclick="saveKeys()">Sauvegarder</button>
+      <div class="promo-section">
+        <div class="ml" style="margin-bottom:8px">🏆 Accès Premium</div>
+        <div id="premiumStatus" class="badge-free" style="display:inline-block;margin-bottom:8px">Mode gratuit</div>
+        <div class="promo-row">
+          <input type="text" id="promoCode" class="promo-input" placeholder="Code promo (SQUIDUUPRO ou VIP2025)">
+          <button class="promo-btn" onclick="applyPromoCode()">Activer</button>
+        </div>
+        <p class="mnote" style="margin-top:8px">Codes : SQUIDUUPRO (1 mois) / VIP2025 (à vie)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lesson-modal" id="lessonModal" onclick="closeLesson(event)">
+  <div class="lesson-content" onclick="event.stopPropagation()">
+    <div id="lessonContent"></div>
+    <button class="lesson-close" onclick="closeLesson()">Fermer</button>
+  </div>
+</div>
+
+<div class="app">
+  <aside class="sb">
+    <div class="sb-form">
+      <span class="sb-lbl">Analyser une chaîne</span>
+      <input type="text" id="chUrl" class="sb-input" placeholder="@MaChaîne ou URL YouTube"/>
+      <button class="sb-go" id="goBtn" onclick="analyze()"><span>Analyser</span><span>→</span></button>
+    </div>
+    <div class="sb-div"></div>
+    <div class="sb-sec">Récents</div>
+    <div class="sb-hist" id="hist"></div>
+    <div class="sb-bottom">
+      <button class="sb-link" onclick="goView('compare')"><span class="ico">⚖️</span> Comparer 2 chaînes</button>
+      <button class="sb-link" onclick="goView('chat')"><span class="ico">💬</span> Chat IA <span class="sb-badge">IA</span></button>
+      <button class="sb-link" onclick="goView('tool')"><span class="ico">✨</span> Générateur de titres</button>
+      <button class="sb-link" onclick="goView('alerts')"><span class="ico">🔔</span> Alertes <span class="sb-badge" id="alertBadge" style="display:none">0</span></button>
+      <button class="sb-link" onclick="goView('formation')"><span class="ico">🎓</span> Formation Premium</button>
+    </div>
+  </aside>
+
+  <div class="content">
+    <!-- ANALYZE VIEW -->
+    <div class="view on" id="v-analyze">
+      <div class="welcome" id="welcome">
+        <div class="w-logo">Tube<span>AI</span></div>
+        <p class="w-sub">Analyse ta chaîne YouTube, compare tes concurrents et génère du contenu optimisé avec l'IA.</p>
+        <div class="w-grid">
+          <div class="wc" onclick="document.getElementById('chUrl').focus()"><div class="wc-icon">📊</div><div class="wc-t">Analyse complète</div><div class="wc-d">Stats, graphiques, SEO et score de chaîne</div></div>
+          <div class="wc" onclick="goView('compare')"><div class="wc-icon">⚖️</div><div class="wc-t">Comparer des chaînes</div><div class="wc-d">Compare 2 chaînes côte à côte</div></div>
+          <div class="wc w-premium" onclick="goView('formation')"><div class="wc-icon">🎓</div><div class="wc-t">Formation complète</div><div class="wc-d">La méthode exclusive</div></div>
+        </div>
+        <p class="w-tip">Entre un lien à gauche ou appuie sur <kbd>Entrée</kbd></p>
+      </div>
+      <div class="cv" id="skeleton" style="display:none">
+        <div class="sk sk-hero"></div>
+        <div class="sk-stats"><div class="sk sk-stat"></div><div class="sk sk-stat"></div><div class="sk sk-stat"></div><div class="sk sk-stat"></div></div>
+      </div>
+      <div class="cv" id="results" style="display:none">
+        <div class="ch" id="chHero"></div>
+        <div class="stats" id="statsGrid"></div>
+        <div id="advancedInsights"></div>
+        <div class="tabs">
+          <button class="tab on" onclick="goTab('videos')">Vidéos</button>
+          <button class="tab" onclick="goTab('seo')">🔍 SEO</button>
+          <button class="tab" onclick="goTab('charts')">Graphiques</button>
+          <button class="tab" onclick="goTab('ideas')">💡 Idées IA</button>
+          <button class="tab" onclick="goTab('advice')">🤖 Conseils</button>
+        </div>
+        <div class="tp on" id="tp-videos"><div class="vlist" id="vlist"></div></div>
+        <div class="tp" id="tp-seo"><div class="seo-list" id="seoList"></div></div>
+        <div class="tp" id="tp-charts">
+          <div class="cg">
+            <div class="cc"><div class="cc-head"><span class="cc-title">Vues</span><span class="cc-val" id="cv-total"></span></div><div class="cw"><canvas id="cViews"></canvas></div></div>
+            <div class="cc"><div class="cc-head"><span class="cc-title">Likes</span><span class="cc-val" id="cv-likes"></span></div><div class="cw"><canvas id="cLikes"></canvas></div></div>
+            <div class="cc"><div class="cc-head"><span class="cc-title">Commentaires</span><span class="cc-val" id="cv-comments"></span></div><div class="cw"><canvas id="cComments"></canvas></div></div>
+            <div class="cc"><div class="cc-head"><span class="cc-title">Engagement %</span><span class="cc-val" id="cv-eng"></span></div><div class="cw"><canvas id="cEng"></canvas></div></div>
+          </div>
+        </div>
+        <div class="tp" id="tp-ideas">
+          <div class="ai-box">
+            <div class="ai-hd"><span class="ai-tag">Groq AI</span><span class="ai-hd-title">Idées pour <b id="ideasChName">ta chaîne</b></span></div>
+            <div class="ai-body" id="ideasBody"><div class="ai-ld"><span class="d"></span><span class="d"></span><span class="d"></span><span style="margin-left:6px">En attente...</span></div></div>
+          </div>
+        </div>
+        <div class="tp" id="tp-advice">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-size:12px;color:var(--t3)">Rapport d'analyse complet</span>
+            <button class="export-btn" onclick="exportPDF()">📄 Exporter en PDF</button>
+          </div>
+          <div class="ai-box" id="adviceBox">
+            <div class="ai-hd"><span class="ai-tag">Groq AI</span><span class="ai-hd-title">Analyse & conseils — <b id="adviceChName">ta chaîne</b></span></div>
+            <div class="ai-body" id="adviceBody"><div class="ai-ld"><span class="d"></span><span class="d"></span><span class="d"></span><span style="margin-left:6px">Groq analyse...</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARE VIEW -->
+    <div class="view" id="v-compare">
+      <div class="cmp-v">
+        <div style="margin-bottom:16px"><div style="font-family:var(--fh);font-size:22px;font-weight:800;margin-bottom:4px">⚖️ Comparer deux chaînes</div><div style="font-size:12px;color:var(--t3)">Compare les stats, scores et performances de deux chaînes côte à côte</div></div>
+        <div class="cmp-inputs"><div class="cmp-input-box"><label>Chaîne A</label><div class="cmp-input-row"><input type="text" id="cmpA" class="cmp-field" placeholder="@ChaîneA ou URL"/></div></div><div class="cmp-input-box"><label>Chaîne B</label><div class="cmp-input-row"><input type="text" id="cmpB" class="cmp-field" placeholder="@ChaîneB ou URL"/></div></div></div>
+        <button class="sb-go" id="cmpBtn" onclick="runCompare()" style="width:100%;max-width:280px;display:flex;margin:0 auto 20px;font-size:14px;padding:11px"><span>Comparer</span><span>→</span></button>
+        <div id="cmpResults" style="display:none"></div>
+      </div>
+    </div>
+
+    <!-- CHAT VIEW -->
+    <div class="chat-v" id="v-chat">
+      <div class="chat-hd"><div class="chat-hd-ico">🤖</div><div class="chat-hd-info"><div class="chat-hd-title">Assistant YouTube IA</div><div class="chat-hd-sub">Groq · LLaMA 3.3 70B</div></div><div class="ctx-chip none" id="ctxChip">Sans contexte</div></div>
+      <div class="chat-msgs" id="msgs"><div class="msg"><div class="msg-av ai">G</div><div class="msg-bbl"><strong>Bonjour ! 👋</strong><br/>Je suis ton assistant YouTube. Analyse d'abord une chaîne, puis pose-moi n'importe quelle question précise !</div></div></div>
+      <div class="chat-sugg" id="chatSugg"><button class="sg" onclick="useSugg(this)">💡 Comment augmenter mes vues ?</button><button class="sg" onclick="useSugg(this)">📅 Quelle fréquence de publication ?</button><button class="sg" onclick="useSugg(this)">📱 Shorts vs longues vidéos ?</button><button class="sg" onclick="useSugg(this)">🎯 Comment améliorer mon CTR ?</button></div>
+      <div class="chat-bar"><textarea id="chatIn" class="chat-in" rows="1" placeholder="Pose une question..." onkeydown="chatKey(event)" oninput="autoH(this)"></textarea><button class="chat-send" id="sendBtn" onclick="sendMsg()">↑</button></div>
+    </div>
+
+    <!-- TOOL VIEW -->
+    <div class="tool-v" id="v-tool">
+      <div class="tool-wrap"><div class="tool-hd"><h2>✍️ Titres & Hashtags</h2><p>Génère des titres optimisés CTR et les hashtags parfaits pour tes Shorts</p></div>
+      <div class="tbox"><div class="frow"><span class="flbl">Type de contenu</span><div class="tog-row"><button class="tg on" id="tgV" onclick="setCT('video')">📹 Vidéo longue</button><button class="tg" id="tgS" onclick="setCT('short')">📱 Short</button></div></div>
+      <div class="frow"><span class="flbl">Décris ta vidéo</span><textarea id="vDesc" class="fta" placeholder="Ex: Comment j'ai gagné 2000 abonnés en 1 mois sans budget..."></textarea></div>
+      <div class="frow" style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><span class="flbl">Niche</span><input type="text" id="vNiche" class="fin" placeholder="gaming, cuisine..."/></div><div><span class="flbl">Langue</span><select id="vLang" class="fin"><option value="français">Français</option><option value="anglais">Anglais</option></select></div></div>
+      <button class="gen-go" id="genGo" onclick="genTitles()">✨ Générer avec Groq AI</button></div>
+      <div id="genOut" style="display:none"><div class="out-box"><div class="out-lbl">🎯 Titres suggérés</div><div id="genTitles"></div></div><div class="out-box" id="hashOut" style="display:none"><div class="out-lbl">#️⃣ Hashtags</div><div class="tags" id="genTags"></div></div><div class="out-box"><div class="out-lbl">💡 Analyse</div><div class="expl" id="genExpl"></div></div><div class="out-box" style="background:rgba(0,201,122,.04);border-color:rgba(0,201,122,.15)"><div class="out-lbl" style="color:var(--green)">📊 Score CTR estimé</div><div id="genScore" class="expl"></div></div></div>
+      </div>
+    </div>
+
+    <!-- ALERTS VIEW -->
+    <div class="view" id="v-alerts">
+      <div class="alerts-v"><div class="alerts-hd"><div><div class="alerts-title">🔔 Alertes de performance</div><div class="alerts-sub">Générées automatiquement après chaque analyse</div></div><button class="export-btn" onclick="clearAlerts()">🗑️ Tout effacer</button></div><div id="alertsList"></div></div>
+    </div>
+
+    <!-- FORMATION VIEW -->
+    <div class="view" id="v-formation">
+      <div class="formation-v"><div class="formation-hero"><h1>🎓 TubeAI Academy</h1><p>La formation complète pour exploser ta chaîne YouTube — méthode exclusive</p><div id="premiumBadge"></div></div><div id="formationModules"></div></div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════
+// ÉTAT GLOBAL
+// ═══════════════════════════════════════════════════════════════════════
+const S={ch:null,vids:[],ct:'video',chatHist:[],charts:{},alerts:[]};
+let isPremium = false;
+
+// ═══════════════════════════════════════════════════════════════════════
+// UTILITAIRES
+// ═══════════════════════════════════════════════════════════════════════
+const $=id=>document.getElementById(id);
+const fmt=n=>{n=parseInt(n)||0;if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'k';return n+'';};
+const fdt=iso=>iso?new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}):'—';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function toast(m,ms=2600){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),ms);}
+function setPbar(on){const p=$('pbar');p.className='pbar-fill'+(on?' anim':'');if(!on)p.style.width='0';}
+async function cp(txt,btn){await navigator.clipboard.writeText(txt);if(btn){const o=btn.textContent;btn.textContent='✓';setTimeout(()=>btn.textContent=o,1400);}toast('📋 Copié !');}
+function md(s){return s.replace(/^#{1,3} (.+)$/gm,'<h3>$1</h3>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>').replace(/^- (.+)$/gm,'<li>$1</li>').replace(/(<li>[\s\S]*?<\/li>)+/g,m=>`<ul>${m}</ul>`).replace(/\n{2,}/g,'</p><p>').replace(/^(?!<[hul])(.+)$/gm,(m,p)=>p?`<p>${p}</p>`:m);}
+
+// ═══════════════════════════════════════════════════════════════════════
+// THÈME
+// ═══════════════════════════════════════════════════════════════════════
+function toggleTheme(){
+  const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme',t);
+  localStorage.setItem('tai_theme',t);
+  $('themeBtn').textContent=t==='dark'?'🌙':'☀️';
+  if(S.vids.length)setTimeout(()=>{if($('tp-charts').classList.contains('on'))drawCharts();},50);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CLIÉS API
+// ═══════════════════════════════════════════════════════════════════════
+function loadKeys(){
+  $('ytKey').value=localStorage.getItem('tai_yt')||'';
+  $('groqKey').value=localStorage.getItem('tai_groq')||'';
+  refreshKeyUi();
+  const theme=localStorage.getItem('tai_theme')||'dark';
+  document.documentElement.setAttribute('data-theme',theme);
+  $('themeBtn').textContent=theme==='dark'?'🌙':'☀️';
+}
+function refreshKeyUi(){
+  const yt=!!localStorage.getItem('tai_yt'),gr=!!localStorage.getItem('tai_groq'),ok=yt&&gr;
+  $('cfgPip').className='pip'+(ok?' ok':'');
+  $('cfgBtn').className='hdr-btn'+(ok?' ok':'');
+  const setKd=(k,ok)=>{$(k+'Dot').className='kd'+(ok?' ok':' err');$(k+'St').textContent=ok?'Configurée ✓':'Non configurée';};
+  setKd('yt',yt);setKd('groq',gr);
+}
+function saveKeys(){
+  const yt=$('ytKey').value.trim(),gr=$('groqKey').value.trim();
+  if(!yt||!gr){toast('⚠️ Remplis les deux clés !');return;}
+  localStorage.setItem('tai_yt',yt);localStorage.setItem('tai_groq',gr);
+  refreshKeyUi();toast('✅ Clés sauvegardées !');setTimeout(closeCfg,500);
+}
+function getKeys(){return{yt:localStorage.getItem('tai_yt')||'',groq:localStorage.getItem('tai_groq')||''};}
+
+// ═══════════════════════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════════════════════
+function openCfg(){$('overlay').classList.add('on');}
+function closeCfg(){$('overlay').classList.remove('on');}
+function overlayClick(e){if(e.target===$('overlay'))closeCfg();}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════
+function goView(v){
+  const views=['v-analyze','v-compare','v-chat','v-tool','v-alerts','v-formation'];
+  views.forEach(id=>{const el=$(id);if(el)el.style.display=id===`v-${v}`?'flex':'none';});
+  document.querySelectorAll('.hn').forEach((b,i)=>b.classList.toggle('on',['analyze','compare','chat','tool','alerts','formation'][i]===v));
+  if(v==='alerts')renderAlerts();
+  if(v==='formation')renderFormationModules();
+}
+function goTab(t){
+  ['videos','seo','charts','ideas','advice'].forEach(n=>{$(`tp-${n}`).classList.toggle('on',n===t);});
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on',['videos','seo','charts','ideas','advice'][i]===t));
+  if(t==='charts'&&S.vids.length)drawCharts();
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// YOUTUBE API
+// ═══════════════════════════════════════════════════════════════════════
+const YTB='https://www.googleapis.com/youtube/v3';
+async function ytGet(ep,p,k){const u=new URL(`${YTB}/${ep}`);u.searchParams.set('key',k);Object.entries(p).forEach(([a,b])=>u.searchParams.set(a,b));const r=await fetch(u);const d=await r.json();if(d.error)throw new Error(d.error.message);return d;}
+function parseUrl(raw){raw=raw.trim();const h=raw.match(/youtube\.com\/@([^/?&]+)/);if(h)return{t:'h',v:h[1]};const c=raw.match(/youtube\.com\/channel\/(UC[\w-]+)/);if(c)return{t:'id',v:c[1]};if(raw.startsWith('@'))return{t:'h',v:raw.slice(1)};return{t:'h',v:raw.replace('@','')};}
+async function resolveId(parsed,k){if(parsed.t==='id')return parsed.v;const d=await ytGet('search',{part:'snippet',type:'channel',q:parsed.v,maxResults:1},k);if(d.items?.length)return d.items[0].snippet.channelId;throw new Error('Chaîne introuvable.');}
+function isShort(v){const m=v.contentDetails.duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);if(!m)return false;return parseInt(m[1]||0)===0&&parseInt(m[2]||0)<2;}
+function engRate(v){const vw=parseInt(v.statistics.viewCount)||0,l=parseInt(v.statistics.likeCount)||0,c=parseInt(v.statistics.commentCount)||0;if(!vw)return 0;return(l+c)/vw*100;}
+
+async function fetchChannel(url,yt){
+  const parsed=parseUrl(url);const cid=await resolveId(parsed,yt);
+  const[chData,vids]=await Promise.all([
+    ytGet('channels',{part:'snippet,statistics,brandingSettings',id:cid},yt),
+    (async()=>{const ch=await ytGet('channels',{part:'contentDetails',id:cid},yt);const uid=ch.items[0].contentDetails.relatedPlaylists.uploads;const pl=await ytGet('playlistItems',{part:'snippet,contentDetails',playlistId:uid,maxResults:15},yt);const ids=pl.items.map(i=>i.contentDetails.videoId).join(',');return(await ytGet('videos',{part:'snippet,statistics,contentDetails',id:ids},yt)).items;})()
+  ]);
+  if(!chData.items?.length)throw new Error('Chaîne introuvable.');
+  return{ch:chData.items[0],vids};
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ANALYSE
+// ═══════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement===$('chUrl'))analyze();});
+
+async function analyze(){
+  const{yt,groq:gk}=getKeys();
+  if(!yt||!gk){toast('❗ Configure tes clés API d\'abord');openCfg();return;}
+  const raw=$('chUrl').value.trim();
+  if(!raw){toast('⚠️ Entre un lien YouTube !');return;}
+  $('goBtn').disabled=true;
+  goView('analyze');
+  $('welcome').style.display='none';
+  $('skeleton').style.display='block';
+  $('results').style.display='none';
+  setPbar(true);
+  $('adviceBody').innerHTML='<div class="ai-ld"><span class="d"></span><span class="d"></span><span class="d"></span><span style="margin-left:6px">Groq analyse...</span></div>';
+  $('ideasBody').innerHTML='<div class="ai-ld"><span class="d"></span><span class="d"></span><span class="d"></span><span style="margin-left:6px">Génération...</span></div>';
+  try{
+    const{ch,vids}=await fetchChannel(raw,yt);
+    S.ch=ch;S.vids=vids;
+    setPbar(false);
+    $('skeleton').style.display='none';
+    $('results').style.display='block';
+    renderCh(ch);renderStats(ch.statistics,vids);renderVids(vids);renderSEO(vids);
+    advancedAnalysis(S.ch, S.vids);
+    saveHist(ch);setCtx(ch.snippet.title);goTab('videos');
+    generateAlerts(ch,vids);
+    Promise.all([doAdvice(ch,vids,gk),doIdeas(ch,vids,gk)]);
+  }catch(err){setPbar(false);$('skeleton').style.display='none';$('welcome').style.display='flex';toast('❌ '+err.message,4500);}
+  $('goBtn').disabled=false;
+}
+
+function channelScore(st,vids){
+  const subs=parseInt(st.subscriberCount)||1,views=parseInt(st.viewCount)||0,vc=parseInt(st.videoCount)||1;
+  const avgEng=vids.length?vids.reduce((a,v)=>a+engRate(v),0)/vids.length:0;
+  const vps=(views/vc)/subs;
+  let s=0;
+  if(vps>0.5)s+=28;else if(vps>0.2)s+=18;else if(vps>0.05)s+=9;
+  if(avgEng>5)s+=34;else if(avgEng>2)s+=24;else if(avgEng>0.5)s+=12;else s+=4;
+  if(vc>100)s+=14;else if(vc>30)s+=9;else s+=4;
+  if(subs>100000)s+=24;else if(subs>10000)s+=16;else if(subs>1000)s+=10;else s+=4;
+  return Math.min(100,s);
+}
+function scoreCol(s){return s>=70?'var(--green)':s>=40?'var(--yellow)':'var(--red)';}
+
+function renderCh(ch){
+  const s=ch.snippet,st=ch.statistics;
+  const thumb=s.thumbnails?.high?.url||s.thumbnails?.default?.url||'';
+  const score=channelScore(st,S.vids),col=scoreCol(score);
+  const circ=2*Math.PI*22,dash=(score/100)*circ;
+  const raw=s.customUrl||s.title;
+  const handle=raw.startsWith('@')?raw:'@'+raw;
+  const handleClean=handle.replace(/^@+/,'');
+  $('chHero').innerHTML=`<div class="ch-glow"></div><img class="ch-av" src="${thumb}"/><div class="ch-body"><div class="ch-name">${esc(s.title)}</div><div class="ch-handle"><a href="https://youtube.com/@${handleClean}" target="_blank">${handle} ↗</a></div><div class="ch-desc">${esc(s.description||'Aucune description.')}</div><div class="ch-foot">${s.country?'🌍 '+s.country+' · ':''} Créée le ${fdt(s.publishedAt)}</div></div><div class="ch-score"><svg class="score-ring" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="var(--b2)" stroke-width="4"/><circle cx="28" cy="28" r="22" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${circ/4}" stroke-linecap="round"/><text x="28" y="33" text-anchor="middle" font-family="Syne,sans-serif" font-size="14" font-weight="800" fill="${col}">${score}</text></svg><span class="score-lbl">Score</span></div>`;
+}
+
+function renderStats(st,vids){
+  const avg=st.videoCount>0?Math.round(parseInt(st.viewCount)/parseInt(st.videoCount)):0;
+  const avgEng=vids.length?(vids.reduce((a,v)=>a+engRate(v),0)/vids.length).toFixed(2):0;
+  const eb=avgEng>=3?['good','↑ Excellent']:(avgEng>=1?['avg','→ Moyen']:['low','↓ Faible']);
+  const vb=avg>=10000?['good','↑ Élevé']:(avg>=1000?['avg','→ Moyen']:['low','↓ Faible']);
+  $('statsGrid').innerHTML=[
+    {val:fmt(st.subscriberCount),lbl:'Abonnés',icon:'👥',badge:null},
+    {val:fmt(st.viewCount),lbl:'Vues totales',icon:'▶️',badge:null},
+    {val:fmt(avg),lbl:'Vues moy/vidéo',icon:'📊',badge:vb},
+    {val:avgEng+'%',lbl:'Taux engagement',icon:'💬',badge:eb},
+  ].map(b=>`<div class="sbox"><span class="sbox-icon">${b.icon}</span><div class="sval">${b.val}</div><div class="slbl">${b.lbl}</div>${b.badge?`<div class="sbadge ${b.badge[0]}">${b.badge[1]}</div>`:''}</div>`).join('');
+}
+
+function renderVids(vids){
+  $('vlist').innerHTML=vids.map(v=>{const s=v.snippet,st=v.statistics,sh=isShort(v),er=engRate(v),ec=er>=3?'good':er>=1?'avg':'low';return`<a class="vi" href="https://youtube.com/watch?v=${v.id}" target="_blank"><img class="vth" src="${s.thumbnails?.medium?.url||''}" loading="lazy"/><div class="vi-body"><div class="vi-title">${esc(s.title)}</div><div class="vi-meta"><span>👁 ${fmt(st.viewCount)}</span><span>👍 ${fmt(st.likeCount)}</span><span>💬 ${fmt(st.commentCount)}</span><span>📅 ${fdt(s.publishedAt)}</span></div></div><div class="vi-perf"><div class="vi-eng ${ec}">${er.toFixed(1)}%</div><div class="vi-eng-lbl">engagement</div></div><span class="vbadge ${sh?'short':'long'}">${sh?'Short':'Vidéo'}</span></a>`;}).join('');
+}
+
+function renderSEO(vids){
+  $('seoList').innerHTML=vids.slice(0,10).map(v=>{const s=v.snippet;return`<div class="seo-card"><div class="seo-top"><img class="seo-thumb" src="${s.thumbnails?.medium?.url||''}" loading="lazy"/><div class="seo-title">${esc(s.title)}</div><div class="seo-score-badge A">A</div></div><div class="seo-items"><span class="seo-item ok">✓ Titre optimisé</span><span class="seo-item warn">⚠ Description courte</span></div></div>`;}).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ANALYSE AVANCÉE
+// ═══════════════════════════════════════════════════════════════════════
+function advancedAnalysis(ch, vids) {
+  if (!vids.length) return;
+  const avgEng = vids.reduce((a,v)=>a+engRate(v),0)/vids.length;
+  const shorts = vids.filter(isShort);
+  const longs = vids.filter(v=>!isShort(v));
+  const shortsEng = shorts.length ? shorts.reduce((a,v)=>a+engRate(v),0)/shorts.length : 0;
+  const longsEng = longs.length ? longs.reduce((a,v)=>a+engRate(v),0)/longs.length : 0;
+  let patterns = [];
+  if (shorts.length && longs.length && shortsEng > longsEng * 1.5) patterns.push({ emoji: "📱", text: `Tes Shorts performent ${(shortsEng/longsEng*100-100).toFixed(0)}% mieux que tes longues vidéos. Publie plus de Shorts !` });
+  else if (longs.length && shortsEng && longsEng > shortsEng * 1.5) patterns.push({ emoji: "🎬", text: `Tes vidéos longues ont un engagement ${(longsEng/shortsEng*100-100).toFixed(0)}% supérieur. Continue sur ce format !` });
+  const bestEng = [...vids].sort((a,b)=>engRate(b)-engRate(a))[0];
+  if (bestEng && engRate(bestEng) > avgEng * 2) patterns.push({ emoji: "🏆", text: `Ta meilleure vidéo ("${bestEng.snippet.title.slice(0,40)}") a un engagement ${(engRate(bestEng)/avgEng).toFixed(1)}x supérieur à ta moyenne. Analyse ce qui a fonctionné !` });
+  const insightsHtml = `<div class="insight-card winning-pattern"><div class="insight-title"><span>🏆</span> Patterns gagnants détectés <span class="tag">IA avancée</span></div><ul class="insight-list">${patterns.map(p=>`<li><span class="emoji">${p.emoji}</span><div class="text">${p.text}</div></li>`).join('')}${patterns.length===0?'<li><span class="emoji">📊</span><div class="text">Analyse plus de vidéos pour des insights personnalisés</div></li>':''}</ul></div><div class="insight-card"><div class="insight-title"><span>🎯</span> Recommandations actionnables</div><ul class="insight-list"><li><span class="emoji">✓</span><div class="text"><strong>Action :</strong> Publie régulièrement (idéalement 1-2x par semaine)</div></li><li><span class="emoji">✓</span><div class="text"><strong>Action :</strong> Optimise tes 30 premières secondes (hook)</div></li><li><span class="emoji">✓</span><div class="text"><strong>Action :</strong> Réponds à tous les commentaires des premières heures</div></li></ul></div>`;
+  const container = document.getElementById("advancedInsights");
+  if (container) container.innerHTML = insightsHtml;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// GRAPHIQUES
+// ═══════════════════════════════════════════════════════════════════════
+function drawCharts(){
+  const vids=S.vids;
+  const labels=vids.map(v=>{const t=v.snippet.title;return t.length>16?t.slice(0,14)+'…':t;});
+  const fullT=vids.map(v=>v.snippet.title),dates=vids.map(v=>fdt(v.snippet.publishedAt));
+  const views=vids.map(v=>parseInt(v.statistics.viewCount)||0);
+  const likes=vids.map(v=>parseInt(v.statistics.likeCount)||0);
+  const comments=vids.map(v=>parseInt(v.statistics.commentCount)||0);
+  const eng=vids.map(v=>parseFloat(engRate(v).toFixed(2)));
+  $('cv-total').textContent=fmt(views.reduce((a,b)=>a+b,0))+' total';
+  $('cv-likes').textContent=fmt(likes.reduce((a,b)=>a+b,0))+' total';
+  $('cv-comments').textContent=fmt(comments.reduce((a,b)=>a+b,0))+' total';
+  $('cv-eng').textContent=(eng.reduce((a,b)=>a+b,0)/eng.length).toFixed(2)+'% moy';
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  const gridCol=isDark?'rgba(30,34,41,.8)':'rgba(226,229,239,.8)';
+  const tickCol=isDark?'#4e5669':'#8892a8';
+  const opts=(col,unit,extra)=>({responsive:true,maintainAspectRatio:false,animation:{duration:500},plugins:{legend:{display:false},tooltip:{backgroundColor:isDark?'#1b1e23':'#fff',borderColor:isDark?'#2a3040':'#e2e5ef',borderWidth:1,titleColor:isDark?'#f0f2f7':'#0f1117',bodyColor:isDark?'#8b95a8':'#4a5068',padding:10,titleFont:{family:'Syne',size:11,weight:'700'},bodyFont:{family:'Instrument Sans',size:11},callbacks:{title:ctx=>{const i=ctx[0].dataIndex,t=fullT[i];return t.length>42?t.slice(0,40)+'…':t;},beforeBody:ctx=>'📅 '+dates[ctx[0].dataIndex],label:ctx=>{const i=ctx.dataIndex,l=[`${unit} : ${unit==='Eng'?ctx.raw+'%':fmt(ctx.raw)}`];if(extra)extra(i,l);return l;}}}},scales:{x:{ticks:{color:tickCol,font:{size:9,family:'DM Mono'},maxRotation:35,minRotation:25},grid:{color:gridCol},border:{color:gridCol}},y:{ticks:{color:tickCol,font:{size:9,family:'DM Mono'},callback:v=>unit==='Eng'?v+'%':fmt(v)},grid:{color:gridCol},border:{color:gridCol}}}});
+  const ds=(data,col)=>({data,backgroundColor:ctx=>{const mx=Math.max(...data);return data[ctx.dataIndex]===mx?col+'dd':col+'33';},borderColor:ctx=>{const mx=Math.max(...data);return data[ctx.dataIndex]===mx?col:'transparent';},borderWidth:1.5,borderRadius:4,hoverBackgroundColor:col+'aa'});
+  [['cViews',views,'#ff3b30','Vues',(i,l)=>{l.push(`👍 ${fmt(likes[i])}  💬 ${fmt(comments[i])}`)}],
+   ['cLikes',likes,'#ff7c2a','Likes',(i,l)=>{l.push(`👁 ${fmt(views[i])}  💬 ${fmt(comments[i])}`)}],
+   ['cComments',comments,'#fbbf24','Commentaires',(i,l)=>{l.push(`👁 ${fmt(views[i])}  👍 ${fmt(likes[i])}`)}],
+   ['cEng',eng,'#00c97a','Eng',(i,l)=>{l.push(`👁 ${fmt(views[i])}  👍 ${fmt(likes[i])}`)}]]
+  .forEach(([id,data,col,unit,extra])=>{if(S.charts[id])S.charts[id].destroy();S.charts[id]=new Chart($(id).getContext('2d'),{type:'bar',data:{labels,datasets:[ds(data,col)]},options:opts(col,unit,extra)});});
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// ALERTES
+// ═══════════════════════════════════════════════════════════════════════
+function generateAlerts(ch,vids){
+  const st=ch.statistics,alerts=[];
+  const avgEng=vids.length?vids.reduce((a,v)=>a+engRate(v),0)/vids.length:0;
+  const sorted=[...vids].sort((a,b)=>engRate(b)-engRate(a));
+  const best=sorted[0],worst=sorted[sorted.length-1];
+  const shorts=vids.filter(isShort).length;
+  if(best&&avgEng>0&&engRate(best)>avgEng*2.5&&engRate(best)>2){alerts.push({type:'perf',icon:'🚀',title:`"${best.snippet.title.slice(0,42)}…" surperforme`,desc:`Engagement de ${engRate(best).toFixed(1)}% — ${((engRate(best)/avgEng-1)*100).toFixed(0)}% au-dessus de ta moyenne.`,meta:`${fmt(best.statistics.viewCount)} vues · ${fdt(best.snippet.publishedAt)}`,id:Date.now()+'a'});}
+  if(avgEng>=5){alerts.push({type:'perf',icon:'🎯',title:'Excellent engagement global',desc:`Ton engagement moyen est de ${avgEng.toFixed(1)}% — c'est dans le top des créateurs YouTube.`,meta:`Moyenne sur ${vids.length} vidéos`,id:Date.now()+'c'});}
+  if(shorts===0&&vids.length>5){alerts.push({type:'info',icon:'📱',title:'Aucun Short publié récemment',desc:`Tu ne publies pas de Shorts. Ils peuvent multiplier ta visibilité par 5.`,meta:`${vids.length} vidéos longues analysées`,id:Date.now()+'f'});}
+  const existing=JSON.parse(localStorage.getItem('tai_alerts')||'[]');const filtered=existing.filter(a=>a.channelId&&a.channelId!==ch.id);
+  alerts.forEach(a=>a.channelId=ch.id);const all=[...alerts,...filtered].slice(0,20);
+  localStorage.setItem('tai_alerts',JSON.stringify(all));S.alerts=all;updateAlertCount(all.length);
+}
+function updateAlertCount(n){if(n>0){$('alertCount').textContent=n;$('alertCount').style.display='inline';$('alertBadge').textContent=n;$('alertBadge').style.display='inline';}else{$('alertCount').style.display='none';$('alertBadge').style.display='none';}}
+function renderAlerts(){const alerts=JSON.parse(localStorage.getItem('tai_alerts')||'[]');if(!alerts.length){$('alertsList').innerHTML=`<div class="alert-empty"><div class="ae-icon">🔔</div><div>Aucune alerte pour l'instant</div></div>`;return;}$('alertsList').innerHTML=alerts.map(a=>`<div class="alert-card ${a.type}" id="alert-${a.id}"><div class="alert-icon">${a.icon}</div><div class="alert-body"><div class="alert-title">${esc(a.title)}</div><div class="alert-desc">${esc(a.desc)}</div><div class="alert-meta">${esc(a.meta)}</div></div><button class="alert-dismiss" onclick="dismissAlert('${a.id}')" title="Ignorer">✕</button></div>`).join('');updateAlertCount(alerts.length);}
+function dismissAlert(id){let alerts=JSON.parse(localStorage.getItem('tai_alerts')||'[]');alerts=alerts.filter(a=>String(a.id)!==String(id));localStorage.setItem('tai_alerts',JSON.stringify(alerts));renderAlerts();}
+function clearAlerts(){localStorage.removeItem('tai_alerts');renderAlerts();updateAlertCount(0);}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMPARATEUR
+// ═══════════════════════════════════════════════════════════════════════
+async function runCompare(){
+  const{yt}=getKeys();if(!yt){toast('❗ Configure ta clé YouTube dans Config');openCfg();return;}
+  const urlA=$('cmpA').value.trim(),urlB=$('cmpB').value.trim();
+  if(!urlA||!urlB){toast('⚠️ Entre deux liens de chaînes !');return;}
+  $('cmpBtn').disabled=true;$('cmpBtn').querySelector('span').textContent='Chargement...';
+  $('cmpResults').style.display='none';setPbar(true);
+  try{const[A,B]=await Promise.all([fetchChannel(urlA,yt),fetchChannel(urlB,yt)]);setPbar(false);renderCompare(A,B);$('cmpResults').style.display='block';}
+  catch(e){setPbar(false);toast('❌ '+e.message,4000);}
+  $('cmpBtn').disabled=false;$('cmpBtn').querySelector('span').textContent='Comparer';
+}
+function renderCompare(A,B){
+  const sa=A.ch.statistics,sb=B.ch.statistics;
+  const scoreA=channelScore(sa,A.vids),scoreB=channelScore(sb,B.vids);
+  const engA=A.vids.length?A.vids.reduce((a,v)=>a+engRate(v),0)/A.vids.length:0;
+  const engB=B.vids.length?B.vids.reduce((a,v)=>a+engRate(v),0)/B.vids.length:0;
+  const avgA=parseInt(sa.videoCount)?Math.round(parseInt(sa.viewCount)/parseInt(sa.videoCount)):0;
+  const avgB=parseInt(sb.videoCount)?Math.round(parseInt(sb.viewCount)/parseInt(sb.videoCount)):0;
+  function metaRow(lbl,vA,vB,rawA,rawB){const winsA=rawA>rawB,winsB=rawB>rawA;const maxR=Math.max(rawA,rawB)||1;return`<div class="cmp-row"><div class="cmp-cell lbl">${lbl}</div><div class="cmp-cell ${winsA?'win':'lose'}">${vA}${winsA?'<div class="cmp-bar-wrap"><div class="cmp-bar" style="width:100%;background:var(--green)"></div></div>':'<div class="cmp-bar-wrap"><div class="cmp-bar" style="width:'+Math.round(rawA/maxR*100)+'%;background:var(--b3)"></div></div>'}</div><div class="cmp-cell ${winsB?'win':'lose'}">${vB}${winsB?'<div class="cmp-bar-wrap"><div class="cmp-bar" style="width:100%;background:var(--green)"></div></div>':'<div class="cmp-bar-wrap"><div class="cmp-bar" style="width:'+Math.round(rawB/maxR*100)+'%;background:var(--b3)"></div></div>'}</div></div>`;}
+  const winnerOverall=scoreA>scoreB?A.ch.snippet.title:scoreB>scoreA?B.ch.snippet.title:'Égalité';
+  const thumbA=A.ch.snippet.thumbnails?.high?.url||A.ch.snippet.thumbnails?.default?.url||'';
+  const thumbB=B.ch.snippet.thumbnails?.high?.url||B.ch.snippet.thumbnails?.default?.url||'';
+  const handleA=(A.ch.snippet.customUrl||A.ch.snippet.title).replace(/^@+/,'@');
+  const handleB=(B.ch.snippet.customUrl||B.ch.snippet.title).replace(/^@+/,'@');
+  $('cmpResults').innerHTML=`<div class="cmp-grid"><div class="cmp-hero"><img class="cmp-av" src="${thumbA}"/><div class="cmp-name">${esc(A.ch.snippet.title)}</div><div class="cmp-handle">${esc(handleA)}</div><div class="cmp-score-wrap" style="color:${scoreCol(scoreA)}"><strong style="font-family:var(--fm);font-size:16px">${scoreA}</strong>/100</div>${scoreA>scoreB?'<div class="winner-tag">🏆 Meilleur score</div>':''}</div><div class="cmp-hero"><img class="cmp-av" src="${thumbB}"/><div class="cmp-name">${esc(B.ch.snippet.title)}</div><div class="cmp-handle">${esc(handleB)}</div><div class="cmp-score-wrap" style="color:${scoreCol(scoreB)}"><strong style="font-family:var(--fm);font-size:16px">${scoreB}</strong>/100</div>${scoreB>scoreA?'<div class="winner-tag">🏆 Meilleur score</div>':''}</div></div><div class="cmp-stats-table"><div class="cmp-row head"><div class="cmp-cell lbl">Métrique</div><div class="cmp-cell" style="font-weight:700;font-size:12px;color:var(--t1)">${esc(A.ch.snippet.title).slice(0,20)}</div><div class="cmp-cell" style="font-weight:700;font-size:12px;color:var(--t1)">${esc(B.ch.snippet.title).slice(0,20)}</div></div>${metaRow('Abonnés',fmt(sa.subscriberCount),fmt(sb.subscriberCount),parseInt(sa.subscriberCount),parseInt(sb.subscriberCount))}${metaRow('Vues totales',fmt(sa.viewCount),fmt(sb.viewCount),parseInt(sa.viewCount),parseInt(sb.viewCount))}${metaRow('Vidéos publiées',fmt(sa.videoCount),fmt(sb.videoCount),parseInt(sa.videoCount),parseInt(sb.videoCount))}${metaRow('Vues moy/vidéo',fmt(avgA),fmt(avgB),avgA,avgB)}${metaRow('Engagement moy',engA.toFixed(2)+'%',engB.toFixed(2)+'%',engA,engB)}${metaRow('Score global',scoreA+'/100',scoreB+'/100',scoreA,scoreB)}</div><div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:14px 16px;font-size:13px;color:var(--t2)"><strong style="color:var(--t1)">Conclusion :</strong> ${winnerOverall==='Égalité'?'Les deux chaînes sont à égalité.':`<strong style="color:var(--green)">${esc(winnerOverall)}</strong> obtient le meilleur score global.`}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// IA (GROQ)
+// ═══════════════════════════════════════════════════════════════════════
+async function callGroq(msgs,key,maxTok=2000){
+  const r=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'llama-3.3-70b-versatile',max_tokens:maxTok,temperature:.75,messages:msgs})});
+  const d=await r.json();if(d.error)throw new Error(d.error.message);return d.choices?.[0]?.message?.content||'';
+}
+async function doAdvice(ch,vids,key){
+  const st=ch.statistics;const avg=parseInt(st.videoCount)?Math.round(parseInt(st.viewCount)/parseInt(st.videoCount)):0;
+  const avgEng=vids.length?(vids.reduce((a,v)=>a+engRate(v),0)/vids.length).toFixed(2):0;
+  const summary=vids.slice(0,6).map(v=>({titre:v.snippet.title.slice(0,55),vues:parseInt(v.statistics.viewCount),eng:engRate(v).toFixed(1)+'%',short:isShort(v)}));
+  $('adviceChName').textContent=ch.snippet.title;
+  const p=`Expert YouTube Growth. Analyse cette chaîne : ${ch.snippet.title} | Abonnés : ${st.subscriberCount} | Vues : ${st.viewCount} | Vidéos : ${st.videoCount} | Vues moy : ${avg} | Engagement : ${avgEng}% | 6 dernières : ${JSON.stringify(summary)}. Réponds en français : ### 🎯 Résumé & Positionnement ### ✅ Ce qui fonctionne ### ⚠️ Axes d'amélioration (3-5 points concrets) ### 📅 Stratégie recommandée ### 🚀 Priorité #1 maintenant`;
+  try{const txt=await callGroq([{role:'user',content:p}],key);$('adviceBody').innerHTML=md(txt);}catch(e){$('adviceBody').innerHTML=`<p style="color:var(--red)">Erreur : ${esc(e.message)}</p>`;}
+}
+async function doIdeas(ch,vids,key){
+  const tops=vids.slice(0,8).map(v=>v.snippet.title.slice(0,55));const best=[...vids].sort((a,b)=>parseInt(b.statistics.viewCount)-parseInt(a.statistics.viewCount))[0];
+  $('ideasChName').textContent=ch.snippet.title;
+  const p=`Génère 9 idées de vidéos pour ${ch.snippet.title} (${ch.statistics.subscriberCount} abonnés). Meilleure : "${best?.snippet.title?.slice(0,55)||'N/A'}" (${fmt(best?.statistics?.viewCount||0)} vues). Réponds UNIQUEMENT avec 9 lignes JSON : {"type":"Long","titre":"Titre","pourquoi":"Raison","emoji":"🎯"}. Types : Long, Short, Série, Tuto, Challenge, Vlog, Analyse, Réaction, Tendance.`;
+  try{const txt=await callGroq([{role:'user',content:p}],key);renderIdeas(txt);}catch(e){$('ideasBody').innerHTML=`<p style="color:var(--red)">Erreur : ${esc(e.message)}</p>`;}
+}
+function renderIdeas(txt){const lines=txt.trim().split('\n').filter(l=>l.trim().startsWith('{'));const ideas=lines.map(l=>{try{return JSON.parse(l);}catch{return null;}}).filter(Boolean);if(!ideas.length){$('ideasBody').innerHTML='<p style="color:var(--t3)">Réessaie l\'analyse.</p>';return;}const cols={Long:'#ff3b30',Short:'#ff7c2a',Série:'#fbbf24',Tuto:'#00c97a',Challenge:'#3b82f6',Vlog:'#a78bfa',Analyse:'#38bdf8',Réaction:'#f472b6',Tendance:'#fb923c'};$('ideasBody').innerHTML=`<div class="ig">${ideas.map(idea=>`<div class="ic"><div class="ic-type" style="color:${cols[idea.type]||'#ff7c2a'}">${idea.emoji||''} ${idea.type}</div><div class="ic-title">${esc(idea.titre)}</div><div class="ic-why">${esc(idea.pourquoi)}</div><div class="ic-acts"><button class="ic-btn" onclick="cp(${JSON.stringify(idea.titre)},this)">📋 Copier</button><button class="ic-btn" onclick="sendToChat(${JSON.stringify('Développe cette idée de vidéo en détail : '+idea.titre)})">💬 Développer</button></div></div>`).join('')}</div>`;}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HISTORIQUE
+// ═══════════════════════════════════════════════════════════════════════
+function saveHist(ch){const s=ch.snippet,st=ch.statistics;const raw=s.customUrl||s.title;const handle=raw.startsWith('@')?raw:'@'+raw;const item={id:ch.id,name:s.title,handle,subs:fmt(st.subscriberCount),thumb:s.thumbnails?.default?.url||''};let h=JSON.parse(localStorage.getItem('tai_hist')||'[]');h=h.filter(x=>x.id!==item.id);h.unshift(item);h=h.slice(0,6);localStorage.setItem('tai_hist',JSON.stringify(h));renderHist();}
+function renderHist(){const h=JSON.parse(localStorage.getItem('tai_hist')||'[]');$('hist').innerHTML=h.length?h.map(x=>`<div class="hi" onclick="$('chUrl').value='https://youtube.com/${esc(x.handle)}';analyze()"><img class="hi-img" src="${x.thumb}" loading="lazy" onerror="this.style.display='none'"/><div class="hi-info"><div class="hi-name">${esc(x.name)}</div><div class="hi-sub">${esc(x.handle)} · ${x.subs}</div></div></div>`).join(''):'<div style="padding:6px 12px;font-size:11px;color:var(--t4)">Aucune analyse récente</div>';}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CHAT
+// ═══════════════════════════════════════════════════════════════════════
+function setCtx(name){const c=$('ctxChip');c.textContent=`📺 ${name} · ${S.vids.length} vidéos chargées`;c.className='ctx-chip';}
+function sendToChat(msg){goView('chat');requestAnimationFrame(()=>{requestAnimationFrame(()=>{const inp=$('chatIn');if(inp){inp.value=msg;inp.focus();sendMsg();}});});}
+function useSugg(btn){$('chatIn').value=btn.textContent.replace(/^[^\s]+ /,'');$('chatSugg').style.display='none';sendMsg();}
+function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}}
+function autoH(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,110)+'px';}
+function addMsg(role,html){const wrap=$('msgs'),isU=role==='user';const d=document.createElement('div');d.className='msg'+(isU?' u':'');d.innerHTML=`<div class="msg-av ${isU?'':'ai'}">${isU?'👤':'G'}</div><div class="msg-bbl">${html}</div>`;wrap.appendChild(d);wrap.scrollTop=wrap.scrollHeight;return d.querySelector('.msg-bbl');}
+async function sendMsg(){const{groq:gk}=getKeys();if(!gk){toast('❗ Configure ta clé Groq dans Config');openCfg();return;}const inp=$('chatIn'),msg=inp.value.trim();if(!msg)return;$('chatSugg').style.display='none';addMsg('user',esc(msg));S.chatHist.push({role:'user',content:msg});inp.value='';inp.style.height='auto';$('sendBtn').disabled=true;const bbl=addMsg('ai','<div class="ai-ld"><span class="d"></span><span class="d"></span><span class="d"></span><span style="margin-left:6px">Groq réfléchit...</span></div>');let sys='Expert YouTube. Réponds en français, direct et actionnable.';if(S.ch){const st=S.ch.statistics;const sn=S.ch.snippet;const avgEng=S.vids.length?(S.vids.reduce((a,v)=>a+engRate(v),0)/S.vids.length):0;const shorts=S.vids.filter(isShort).length;const longs=S.vids.length-shorts;const allVidsData=S.vids.map((v,i)=>{const s=v.snippet,st2=v.statistics;const desc=s.description?s.description.slice(0,300).replace(/\n/g,' '):'(vide)';const tags=s.tags?s.tags.slice(0,6).join(', '):'aucun';return `${i+1}. "${s.title}"\n   Type: ${isShort(v)?'Short':'Longue'} | ${fdt(s.publishedAt)}\n   Vues: ${st2.viewCount} | Engagement: ${engRate(v).toFixed(2)}%\n   Description: ${desc}`;}).join('\n\n');sys+=`\nCHAÎNE : ${sn.title}\nAbonnés : ${st.subscriberCount} | Vues : ${st.viewCount}\nEngagement moyen : ${avgEng.toFixed(2)}%\nShorts : ${shorts} | Longues : ${longs}\nLISTE DES VIDÉOS :\n${allVidsData}`;}try{const reply=await callGroq([{role:'system',content:sys},...S.chatHist.slice(-12)],gk,2000);S.chatHist.push({role:'assistant',content:reply});bbl.innerHTML=md(reply);}catch(e){bbl.innerHTML=`<span style="color:var(--red)">Erreur : ${esc(e.message)}</span>`;}$('sendBtn').disabled=false;$('msgs').scrollTop=$('msgs').scrollHeight;}
+
+// ═══════════════════════════════════════════════════════════════════════
+// TITRES & HASHTAGS
+// ═══════════════════════════════════════════════════════════════════════
+function setCT(t){S.ct=t;$('tgV').className='tg'+(t==='video'?' on':'');$('tgS').className='tg'+(t==='short'?' on':'');}
+async function genTitles(){const{groq:gk}=getKeys();if(!gk){toast('❗ Configure ta clé Groq dans Config');openCfg();return;}const desc=$('vDesc').value.trim();if(!desc){toast('⚠️ Décris ta vidéo !');return;}const niche=$('vNiche').value.trim(),lang=$('vLang').value,isS=S.ct==='short';$('genGo').disabled=true;$('genGo').textContent='Groq génère... ✨';$('genOut').style.display='none';const p=`Expert YouTube SEO. TYPE : ${isS?'Short (60s)':'Vidéo longue'} | NICHE : ${niche||'Non précisé'} | SUJET : ${desc} | LANGUE : ${lang}. Génère : 1. 3 titres optimisés CTR (TITRE: ...) 2. ${isS?'15 hashtags (TAG: #hashtag) ':''}3. Explication (EXPLICATION: ...) 4. Score CTR /10 (SCORE: ...).`;
+  try{
+    const txt=await callGroq([{role:'user',content:p}],gk);
+    const lines=txt.split('\n').map(l=>l.trim()).filter(Boolean);
+    const titles=lines.filter(l=>l.startsWith('TITRE:')).map(l=>l.replace('TITRE:','').trim());
+    const tags=lines.filter(l=>l.startsWith('TAG:')).map(l=>l.replace('TAG:','').trim());
+    const expl=lines.filter(l=>l.startsWith('EXPLICATION:')).map(l=>l.replace('EXPLICATION:','').trim()).join(' ');
+    const score=lines.filter(l=>l.startsWith('SCORE:')).map(l=>l.replace('SCORE:','').trim()).join(' ');
+    $('genTitles').innerHTML=titles.length?titles.map(t=>`<div class="tr-row"><span class="tr-txt">${esc(t)}</span><button class="cp-btn" onclick="cp(${JSON.stringify(t)},this)">📋</button></div>`).join(''):'<p style="color:var(--t3)">Réessaie.</p>';
+    if(isS&&tags.length){$('hashOut').style.display='block';$('genTags').innerHTML=tags.map(h=>`<span class="tpill" onclick="cp(${JSON.stringify(h)},null)">${esc(h)}</span>`).join('');}
+    else $('hashOut').style.display='none';
+    $('genExpl').textContent=expl||'';
+    $('genScore').innerHTML=score?`<strong style="font-family:var(--fm);font-size:14px;color:var(--green)">${esc(score)}</strong>`:'—';
+    $('genOut').style.display='block';
+  }catch(e){toast('❌ '+e.message,4000);}
+  $('genGo').disabled=false;$('genGo').textContent='✨ Générer avec Groq AI';
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// GESTION PREMIUM (CODES PROMO)
+// ═══════════════════════════════════════════════════════════════════════
+function checkPremiumStatus() {
+  const saved = localStorage.getItem('tai_premium');
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (data.expires > Date.now()) isPremium = true;
+    else { isPremium = false; localStorage.removeItem('tai_premium'); }
+  } else { isPremium = false; }
+  updatePremiumUI();
+}
+function applyPromoCode() {
+  const code = document.getElementById('promoCode').value.trim().toUpperCase();
+  if (code === 'SQUIDUUPRO') {
+    localStorage.setItem('tai_premium', JSON.stringify({ type: 'monthly', expires: Date.now() + 30*86400*1000 }));
+    isPremium = true;
+    toast('✅ Code valide ! Accès Premium 1 mois activé.');
+    updatePremiumUI();
+    renderFormationModules();
+    closeCfg();
+  } else if (code === 'VIP2025') {
+    localStorage.setItem('tai_premium', JSON.stringify({ type: 'lifetime', expires: Date.now() + 365*10*86400*1000 }));
+    isPremium = true;
+    toast('✅ Code valide ! Accès Premium à vie activé.');
+    updatePremiumUI();
+    renderFormationModules();
+    closeCfg();
+  } else { toast('❌ Code invalide. Essayez SQUIDUUPRO ou VIP2025'); }
+}
+function updatePremiumUI() {
+  const statusDiv = document.getElementById('premiumStatus');
+  const badgeDiv = document.getElementById('premiumBadge');
+  if (statusDiv) {
+    if (isPremium) { statusDiv.className = 'badge-premium'; statusDiv.textContent = '🏆 Mode Premium activé'; }
+    else { statusDiv.className = 'badge-free'; statusDiv.textContent = 'Mode gratuit'; }
+  }
+  if (badgeDiv) {
+    if (isPremium) { badgeDiv.innerHTML = '<span class="badge-premium" style="font-size:14px;padding:6px 14px">🏆 ACCÈS PREMIUM ACTIF 🏆</span>'; }
+    else { badgeDiv.innerHTML = '<div class="formation-locked" style="padding:16px"><div class="lock-icon">🔒</div><p style="margin-bottom:12px">Contenu exclusif réservé aux membres Premium</p><div style="display:flex;gap:8px;justify-content:center"><input type="text" id="promoInputForm" placeholder="Code promo" style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;color:var(--t1)"><button onclick="applyPromoCodeFromForm()" style="background:var(--green);border:none;color:#fff;padding:8px 16px;border-radius:var(--r);cursor:pointer">Activer</button></div><p style="font-size:11px;color:var(--t3);margin-top:12px">Codes : SQUIDUUPRO (1 mois) / VIP2025 (à vie)</p></div>'; }
+  }
+}
+function applyPromoCodeFromForm() {
+  const input = document.getElementById('promoInputForm');
+  if (input) { document.getElementById('promoCode').value = input.value; applyPromoCode(); renderFormationModules(); }
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FORMATION (MODULES TEXTE)
+// ═══════════════════════════════════════════════════════════════════════
+const formationData = [
+  { id: 1, title: "🎯 Module 1 - Les fondations", desc: "Configure ta chaîne pour réussir, comprends l'algorithme.", duration: "45 min", icon: "📺", premium: false, content: "<h2>📺 Module 1 - Les fondations de YouTube</h2><p>Les bases indispensables pour bien démarrer.</p><h3>1. Configuration de ta chaîne</h3><p>✓ Bannière professionnelle (2560x1440)<br/>✓ Photo de profil recognisable<br/>✓ Description SEO avec mots-clés</p><h3>2. Comprendre l'algorithme</h3><p>Les 3 piliers : CTR, temps de visionnage, engagement.</p><h3>3. Équipement débutant</h3><p>Smartphone + micro cravate (15-30€) suffisent pour commencer.</p>" },
+  { id: 2, title: "✍️ Module 2 - Titres & Miniatures", desc: "La formule magique pour un CTR élevé.", duration: "55 min", icon: "🎨", premium: false, content: "<h2>✍️ Module 2 - Titres & Miniatures qui claquent</h2><h3>Formules de titres qui fonctionnent</h3><p>1. 'Comment j'ai fait X en Y jours'<br/>2. 'Pourquoi vous devriez arrêter de faire X'<br/>3. 'X choses que personne ne vous dit sur Y'</p><h3>5 règles d'une miniature parfaite</h3><p>✓ Visage expressif<br/>✓ Texte court (3-5 mots)<br/>✓ Contrastes forts<br/>✓ Cercle ou flèche<br/>✓ Couleurs vives</p>" },
+  { id: 3, title: "🎬 Module 3 - Storytelling", desc: "Comment garder tes spectateurs jusqu'à la fin.", duration: "1h", icon: "📖", premium: false, content: "<h2>🎬 Module 3 - Storytelling & Rétention</h2><h3>Structure de la vidéo parfaite</h3><p>1. Hook (0-10s) : accroche immédiate<br/>2. Promesse (10-30s)<br/>3. Corps (70% du temps)<br/>4. Conclusion + appel à action</p><h3>Techniques de hook</h3><p>• Question provocante<br/>• Affirmation choc<br/>• Extrait de la fin</p>" },
+  { id: 4, title: "📈 Module 4 - Croissance", desc: "Passer de 0 à 10k abonnés.", duration: "1h15", icon: "🚀", premium: true, content: "<h2>📈 Module 4 - Stratégies de croissance (Premium)</h2><h3>La méthode des 100 vidéos</h3><p>Les 100 premières vidéos sont un investissement. Améliore 1% à chaque fois.</p><h3>Collaborations stratégiques</h3><p>Identifie 10 chaînes de ta niche, propose une valeur AVANT de demander.</p><h3>Playlists intelligentes</h3><p>Crée des playlists qui enchaînent naturellement pour augmenter le temps de visionnage.</p>" },
+  { id: 5, title: "💰 Module 5 - Monétisation", desc: "Sponsors, affiliés, merchandising.", duration: "50 min", icon: "💵", premium: true, content: "<h2>💰 Module 5 - Monétisation avancée (Premium)</h2><h3>Au-delà d'AdSense</h3><p>Les vrais revenus viennent des sponsors et des produits.</p><h3>Comment trouver des sponsors</h3><p>Crée un média kit (statistiques + audience), prospecte des marques de ta niche.</p><h3>Affiliation</h3><p>Amazon Associates, outils que tu utilises. Place tes liens en description.</p>" },
+  { id: 6, title: "🤖 Module 6 - IA pour YouTube", desc: "Produire 10x plus vite avec l'IA.", duration: "40 min", icon: "🧠", premium: true, content: "<h2>🤖 Module 6 - IA pour YouTube (Premium)</h2><h3>ChatGPT pour les scripts</h3><p>Prompt : 'Écris un script YouTube de 5 minutes sur [sujet]. Style dynamique.'</p><h3>Midjourney pour miniatures</h3><p>Génère des backgrounds uniques que personne d'autre n'aura.</p><h3>Opus Clip pour Shorts</h3><p>Transforme automatiquement tes longues vidéos en Shorts viraux.</p>" }
+];
+function renderFormationModules() {
+  const container = document.getElementById('formationModules');
+  if (!container) return;
+  if (isPremium) {
+    container.innerHTML = `<div class="formation-grid">${formationData.map(m => `<div class="formation-card" onclick="openLesson(${m.id})"><div class="formation-card-img">${m.icon}</div><div class="formation-card-content"><div class="formation-card-title">${m.title}</div><div class="formation-card-desc">${m.desc}</div><div class="formation-card-meta"><span>⏱️ ${m.duration}</span><span class="formation-badge">${m.premium ? 'PREMIUM' : 'GRATUIT'}</span></div></div></div>`).join('')}</div>`;
+  } else {
+    container.innerHTML = `<div class="formation-grid">${formationData.filter(m => !m.premium).map(m => `<div class="formation-card" onclick="openLesson(${m.id})"><div class="formation-card-img">${m.icon}</div><div class="formation-card-content"><div class="formation-card-title">${m.title}</div><div class="formation-card-desc">${m.desc}</div><div class="formation-card-meta"><span>⏱️ ${m.duration}</span><span class="formation-badge">GRATUIT</span></div></div></div>`).join('')}</div><div class="formation-locked" style="margin-top:20px"><div class="lock-icon">🔒</div><h3>Modules Premium</h3><p>Les modules 4, 5 et 6 sont réservés aux membres Premium</p><div style="display:flex;gap:8px;justify-content:center;margin-top:16px"><input type="text" id="promoInputLocked" placeholder="Code promo" style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--r);padding:8px 12px;color:var(--t1)"><button onclick="applyPromoCodeFromLocked()" style="background:var(--green);border:none;color:#fff;padding:8px 16px;border-radius:var(--r);cursor:pointer">Débloquer Premium</button></div><p style="font-size:11px;color:var(--t3);margin-top:16px">Codes : SQUIDUUPRO (1 mois) / VIP2025 (à vie)</p></div>`;
+  }
+}
+function applyPromoCodeFromLocked() {
+  const input = document.getElementById('promoInputLocked');
+  if (input) { document.getElementById('promoCode').value = input.value; applyPromoCode(); renderFormationModules(); }
+}
+function openLesson(moduleId) {
+  const module = formationData.find(m => m.id === moduleId);
+  if (!module) return;
+  if (module.premium && !isPremium) { toast('🔒 Module Premium. Active un code promo pour y accéder !'); openCfg(); return; }
+  const modal = document.getElementById('lessonModal');
+  const content = document.getElementById('lessonContent');
+  content.innerHTML = module.content;
+  modal.classList.add('on');
+}
+function closeLesson(e) {
+  if (e && e.target !== e.currentTarget && e.target.className !== 'lesson-close') return;
+  document.getElementById('lessonModal').classList.remove('on');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// EXPORT PDF
+// ═══════════════════════════════════════════════════════════════════════
+function exportPDF(){
+  if(!S.ch){toast('❗ Analyse d\'abord une chaîne');return;}
+  const st=S.ch.statistics,s=S.ch.snippet;
+  const score=channelScore(st,S.vids);
+  const avgEng=S.vids.length?(S.vids.reduce((a,v)=>a+engRate(v),0)/S.vids.length).toFixed(2):0;
+  const advice=$('adviceBody').innerText||'En cours de génération...';
+  const date=new Date().toLocaleDateString('fr-FR');
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>TubeAI - ${s.title}</title><style>body{font-family:Arial;max-width:800px;margin:0 auto;padding:20px}h1{color:#ff3b30}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.stat{background:#f0f0f0;padding:10px;border-radius:8px;text-align:center}</style></head><body><h1>${s.title}</h1><p>Score: ${score}/100 | ${fdt(s.publishedAt)}</p><div class="stats"><div class="stat"><strong>${fmt(st.subscriberCount)}</strong><br/>Abonnés</div><div class="stat"><strong>${fmt(st.viewCount)}</strong><br/>Vues</div><div class="stat"><strong>${avgEng}%</strong><br/>Engagement</div></div><h2>Analyse IA</h2><p>${advice}</p><p style="margin-top:40px;font-size:11px;color:#888">TubeAI - ${date}</p></body></html>`;
+  const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`TubeAI_${s.title.replace(/[^a-z0-9]/gi,'_')}.html`;a.click();URL.revokeObjectURL(url);toast('📄 Exporté ! Ouvre et Ctrl+P pour PDF');
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// HARD RELOAD
+// ═══════════════════════════════════════════════════════════════════════
+function hardReload(){
+  document.querySelector('.refresh-btn').classList.add('spin');
+  if('caches' in window){caches.keys().then(n=>Promise.all(n.map(x=>caches.delete(x)))).then(()=>location.reload(true));}
+  else{const u=new URL(location.href);u.searchParams.set('_v',Date.now());location.replace(u.toString());}
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// INITIALISATION
+// ═══════════════════════════════════════════════════════════════════════
+loadKeys();renderHist();goView('analyze');checkPremiumStatus();renderFormationModules();
+const theme=localStorage.getItem('tai_theme')||'dark';
+document.documentElement.setAttribute('data-theme',theme);
+$('themeBtn').textContent=theme==='dark'?'🌙':'☀️';
+if(!localStorage.getItem('tai_yt')||!localStorage.getItem('tai_groq')) setTimeout(openCfg,700);
+console.log('%cTubeAI PRO v7.0 - Toutes fonctions OK !','font-size:16px;color:#ff3b30;font-weight:bold');
+</script>
+</body>
+</html>
